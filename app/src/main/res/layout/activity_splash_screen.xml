@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.macbook.smartparking.SplashScreen"
+    android:background="@color/primary">
+
+    <LinearLayout
+        android:layout_centerVertical="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/welcome"
+            android:id="@+id/iconWelcome"
+            android:tint="@android:color/white"
+            android:layout_gravity="center_horizontal"/>
+
+        <TextView
+            android:paddingTop="16dp"
+            android:textSize="20sp"
+            android:textColor="@color/primary_light"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/welcome_text"/>
+        
+        <Button
+            android:layout_marginTop="16dp"
+            android:layout_width="@dimen/width_button_splash"
+            android:layout_height="wrap_content"
+            android:text="@string/continue_next"
+            android:layout_gravity="center_horizontal"
+            android:textColor="@color/primary_text"
+            android:backgroundTint="@color/accent"
+            android:id="@+id/continueButton"/>
+        <Button
+            android:layout_width="@dimen/width_button_splash"
+            android:layout_height="wrap_content"
+            android:text="@string/continue_administrator"
+            android:layout_gravity="center_horizontal"
+            android:id="@+id/continueButtonAdmin"/>
+
+    </LinearLayout>
+
+
+</RelativeLayout>
