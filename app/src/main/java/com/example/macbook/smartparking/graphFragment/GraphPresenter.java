@@ -4,12 +4,10 @@ import android.content.Context;
 import android.util.Log;
 
 import com.example.macbook.smartparking.R;
-import com.example.macbook.smartparking.data.sensorInfo.FirstGraphInterface;
-import com.example.macbook.smartparking.data.sensorInfo.FirstGraphResponse;
-import com.example.macbook.smartparking.data.sensorInfo.Hour;
-import com.example.macbook.smartparking.data.sensorInfo.MainAdminResponse;
-import com.example.macbook.smartparking.data.sensorInfo.Sensor;
-import com.example.macbook.smartparking.data.sensorInfo.SensorResponseInterface;
+import com.example.macbook.smartparking.data.graphs.first.FirstGraphInterface;
+import com.example.macbook.smartparking.data.graphs.second.SecondGraphInterface;
+import com.example.macbook.smartparking.data.graphs.first.FirstGraphResponse;
+import com.example.macbook.smartparking.data.graphs.first.Hour;
 import com.example.macbook.smartparking.mainFragment.MainViewFragment;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;

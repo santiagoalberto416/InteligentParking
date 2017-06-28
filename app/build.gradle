@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 
 android {
+    useLibrary 'org.apache.http.legacy'
     compileSdkVersion 25
     buildToolsVersion "25.0.3"
     defaultConfig {
@@ -32,5 +33,7 @@ dependencies {
     compile 'com.squareup.retrofit2:converter-gson:2.0.2'
     compile 'com.wdullaer:materialdatetimepicker:3.2.2'
     compile 'com.github.lecho:hellocharts-android:v1.5.8'
+    compile 'com.google.android.gms:play-services-maps:9.4.0'
+    compile 'com.google.maps.android:android-maps-utils:0.4.+'
     testCompile 'junit:junit:4.12'
 }
