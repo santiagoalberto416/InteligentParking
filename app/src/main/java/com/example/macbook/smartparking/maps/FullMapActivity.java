@@ -12,6 +12,9 @@ import android.util.Log;
 
 import com.example.macbook.smartparking.R;
 import com.example.macbook.smartparking.data.map.RestTask;
+import com.github.nkzawa.emitter.Emitter;
+import com.github.nkzawa.socketio.client.IO;
+import com.github.nkzawa.socketio.client.Socket;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -23,6 +26,8 @@ import com.google.maps.android.geojson.GeoJsonPolygonStyle;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.net.URISyntaxException;
 
 public class FullMapActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -39,7 +44,7 @@ public class FullMapActivity extends AppCompatActivity implements OnMapReadyCall
         // Required empty public constructor
     }
 
-
+    private Socket mSocket;
 
     @Override
     public void onMapReady(GoogleMap map) {
@@ -49,8 +54,10 @@ public class FullMapActivity extends AppCompatActivity implements OnMapReadyCall
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        try {
+            mSocket = IO.socket(getApplicationContext().getString(R.string.socket_url));
+        } catch (URISyntaxException e) {}
         setContentView(R.layout.fragment_blank);
-
         MapWorkerSingleton.getInstance().getContent(getString(R.string.server_url)+"five", this);
         progress = ProgressDialog.show(this, "Getting Data ...", "Waiting For Results...", true);
         registerReceiver(receiver, new IntentFilter(MapWorkerSingleton.ACTION_FOR_INTENT_CALLBACK));
@@ -89,7 +96,7 @@ public class FullMapActivity extends AppCompatActivity implements OnMapReadyCall
                     data = new JSONObject(response);
                     if(data!=null && mapa!=null){
                         layer = new GeoJsonLayer(mapa, data);
-                        mapa.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(32.459509, -116.825864), 20));
+                        mapa.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(32.460266, -116.825946), 18));
                         for (GeoJsonFeature feature : layer.getFeatures()) {
                             if (feature.hasProperty("state")) {
                                 Log.d("id",feature.getProperty("id"));
@@ -97,15 +104,17 @@ public class FullMapActivity extends AppCompatActivity implements OnMapReadyCall
 
                                 GeoJsonPolygonStyle style = new GeoJsonPolygonStyle();
                                 if(state == 1){
-                                    style.setFillColor(Color.GREEN);
+                                    style.setFillColor(Color.parseColor("#A6BBC6CE"));
                                 }else{
-                                    style.setFillColor(Color.YELLOW);
+                                    style.setFillColor(Color.parseColor("#A6E33232"));
                                 }
                                 feature.setPolygonStyle(style);
                                 layer.addFeature(feature);
                             }
                         }
                         layer.addLayerToMap();
+                        mSocket.connect();
+                        mSocket.on("sendChangeToDash", onNewMessage);
                     }
                 }catch(JSONException ex){
 
@@ -114,4 +123,57 @@ public class FullMapActivity extends AppCompatActivity implements OnMapReadyCall
             }
         }
     };
+
+    private Emitter.Listener onNewMessage = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            final Object[] arg = args;
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                    JSONObject data = new JSONObject((String) arg[0]);
+                    Log.d("data socket", data.toString());
+                    int id;
+                    String state;
+                    try {
+                        id = data.getInt("id");
+                        state = data.getString("state");
+                    } catch (JSONException e) {
+                        return;
+                    }
+                    changeStateToFeature(id, state);
+                    // add the message to view
+
+
+                    }catch (JSONException ex){
+                        ex.printStackTrace();
+                    }
+                }
+            });
+        }
+    };
+
+    private void changeStateToFeature(int id, String state){
+        if(mapa!=null){
+            for (GeoJsonFeature feature : layer.getFeatures()) {
+                if (feature.hasProperty("id")) {
+                    Log.d("id",feature.getProperty("id"));
+                    int idFeature = Integer.parseInt(feature.getProperty("id"));
+                    if(id==idFeature){
+                        GeoJsonPolygonStyle style = new GeoJsonPolygonStyle();
+                        if(state.equals("free")){
+                            style.setFillColor(Color.parseColor("#A6BBC6CE"));
+                        }else if(state.equals("ocupated")){
+                            style.setFillColor(Color.parseColor("#A6E33232"));
+                        }else if(state.equals("parking")){
+                            style.setFillColor(Color.YELLOW);
+                        }
+                        feature.setPolygonStyle(style);
+                        layer.addFeature(feature);
+                    }
+                }
+            }
+        }
+    }
 }
