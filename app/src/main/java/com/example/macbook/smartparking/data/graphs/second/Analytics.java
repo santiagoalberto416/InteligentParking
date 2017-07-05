@@ -1,5 +1,5 @@
 
-package com.example.macbook.smartparking.data.sensorInfo;
+package com.example.macbook.smartparking.data.graphs.second;
 
 import java.util.HashMap;
 import java.util.List;
@@ -7,16 +7,16 @@ import java.util.Map;
 
 public class Analytics {
 
-    private String month;
+    private String date;
     private List<Hour> hours = null;
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
-    public String getMonth() {
-        return month;
+    public String getDate() {
+        return date;
     }
 
-    public void setMonth(String month) {
-        this.month = month;
+    public void setDate(String date) {
+        this.date = date;
     }
 
     public List<Hour> getHours() {

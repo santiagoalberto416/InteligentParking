@@ -1,9 +1,9 @@
 package com.example.macbook.smartparking;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -17,6 +17,8 @@ import android.widget.RelativeLayout;
 
 import com.example.macbook.smartparking.graphContainer.GraphContainerFragment;
 import com.example.macbook.smartparking.mainFragment.MainFragment;
+import com.example.macbook.smartparking.mainFragment.OnClickedItem;
+import com.example.macbook.smartparking.maps.MapActivityMain;
 
 public class HomeScreenAdministrator extends AppCompatActivity implements OnGraphButtonListener {
 
@@ -25,29 +27,21 @@ public class HomeScreenAdministrator extends AppCompatActivity implements OnGrap
     String tagInUse;
     MainFragment fragment;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_home_screen_administrator);
-        fragmentContainer = (RelativeLayout)findViewById(R.id.fragmentContainer);
-        fm = getSupportFragmentManager() ;
-        FragmentTransaction ft = fm.beginTransaction();
-        fragment = new MainFragment();
-        fragment.setListener(this);
-        ft.add(R.id.fragmentContainer,fragment , null);
-        ft.commit();
-
-        fm.addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
-            @Override
-            public void onBackStackChanged() {
-                if(tagInUse.equals(MainFragment.TAG_MAIN)){
-                    tagInUse = GraphContainerFragment.TAG_GRAPH_CONTAINER;
-                }else{
-                    tagInUse = MainFragment.TAG_MAIN;
-                }
-            }
-        });
+        if(savedInstanceState==null) {
+            fragmentContainer = (RelativeLayout) findViewById(R.id.fragmentContainer);
+            fm = getSupportFragmentManager();
+            FragmentTransaction ft = fm.beginTransaction();
+            fragment = new MainFragment();
+            fragment.setListener(this);
+            ft.add(R.id.fragmentContainer, fragment, null);
+            ft.commit();
+        }
     }
 
     @Override
@@ -79,6 +73,7 @@ public class HomeScreenAdministrator extends AppCompatActivity implements OnGrap
     @Override
     public void onClickGraph() {
         GraphContainerFragment fragment = new GraphContainerFragment();
+        fm = getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
         fragment.setEnterTransition(new Slide(Gravity.RIGHT));
         fragment.setExitTransition(new Slide(Gravity.LEFT));
@@ -88,15 +83,4 @@ public class HomeScreenAdministrator extends AppCompatActivity implements OnGrap
         ft.commit();
     }
 
-
-
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        //Save the fragment's instance
-        if(outState!=null){
-            getSupportFragmentManager().putFragment(outState, "myFragmentName", fragment);
-        }
-    }
 }

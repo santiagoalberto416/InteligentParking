@@ -1,5 +1,7 @@
 
-package com.example.macbook.smartparking.data.sensorInfo;
+package com.example.macbook.smartparking.data.graphs.first;
+
+import com.example.macbook.smartparking.data.graphs.first.Analytics;
 
 import java.util.HashMap;
 import java.util.Map;

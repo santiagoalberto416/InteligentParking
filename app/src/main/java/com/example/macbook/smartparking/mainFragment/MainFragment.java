@@ -1,5 +1,8 @@
 package com.example.macbook.smartparking.mainFragment;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -13,15 +16,17 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import com.example.macbook.smartparking.HomeScreenAdministrator;
 import com.example.macbook.smartparking.OnGraphButtonListener;
 import com.example.macbook.smartparking.R;
 import com.example.macbook.smartparking.data.sensorInfo.MainAdminResponse;
 import com.example.macbook.smartparking.data.sensorInfo.Sensor;
+import com.example.macbook.smartparking.maps.MapActivityMain;
 
 import java.util.List;
 
 
-public class MainFragment extends Fragment implements MainViewFragment {
+public class MainFragment extends Fragment implements MainViewFragment, OnClickedItem {
 
     public static final String TAG_MAIN = "mainfragment";
     private FloatingActionButton goToGraphsButton;
@@ -42,6 +47,19 @@ public class MainFragment extends Fragment implements MainViewFragment {
     }
 
     @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        Activity a;
+        if (context instanceof Activity){
+            a=(Activity) context;
+            if (a instanceof OnGraphButtonListener) {
+                listener = ((OnGraphButtonListener) a);
+            }
+        }
+
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -56,16 +74,17 @@ public class MainFragment extends Fragment implements MainViewFragment {
         progressContainer = (RelativeLayout)rootView.findViewById(R.id.progresView);
         mRecyclerView = (RecyclerView)rootView.findViewById(R.id.recyclerView);
         emptyStateContainer = (LinearLayout)rootView.findViewById(R.id.emptyState);
-
-
-        if(listener!=null){
-            goToGraphsButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+        goToGraphsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(listener!=null) {
+                    listener.onClickGraph();
+                }else {
+                    listener = (OnGraphButtonListener)getActivity();
                     listener.onClickGraph();
                 }
-            });
-        }
+            }
+        });
         presenter = new MainFragmentPresenter(this);
         presenter.getData(getActivity());
         return rootView;
@@ -93,7 +112,7 @@ public class MainFragment extends Fragment implements MainViewFragment {
             mRecyclerView.setLayoutManager(mLayoutManager);
 
             // specify an adapter (see also next example)
-            mAdapter = new MainFragmentAdapter(response);
+            mAdapter = new MainFragmentAdapter(response, this);
             mRecyclerView.setAdapter(mAdapter);
         }else{
             emptyStateContainer.setVisibility(View.VISIBLE);
@@ -119,5 +138,12 @@ public class MainFragment extends Fragment implements MainViewFragment {
         super.onActivityCreated(savedInstanceState);
 //        someVarA = savedInstanceState.getInt("someVarA");
 //        someVarB = savedInstanceState.getString("someVarB");
+    }
+
+    @Override
+    public void onClickPosition(int id) {
+        Intent goToMap = new Intent(getActivity(), MapActivityMain.class);
+        goToMap.putExtra("id", id);
+        getActivity().startActivity(goToMap);
     }
 }
