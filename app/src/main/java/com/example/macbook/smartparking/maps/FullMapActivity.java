@@ -1,14 +1,17 @@
 package com.example.macbook.smartparking.maps;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 
 import com.example.macbook.smartparking.R;
 import com.example.macbook.smartparking.data.map.RestTask;
@@ -38,6 +41,7 @@ public class FullMapActivity extends AppCompatActivity implements OnMapReadyCall
     private GoogleMap mapa;
     private JSONObject data;
     private GeoJsonLayer layer;
+    private FloatingActionButton button;
 
 
     public FullMapActivity() {
@@ -65,6 +69,17 @@ public class FullMapActivity extends AppCompatActivity implements OnMapReadyCall
                 .findFragmentById(R.id.map);
 
         mapFragment.getMapAsync(this);
+        button = (FloatingActionButton)findViewById(R.id.instructionsButton);
+
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Dialog dialog = new Dialog(FullMapActivity.this);
+                dialog.setContentView(R.layout.instructions_layout);
+                dialog.show();
+            }
+        });
+
     }
 
     @Override
