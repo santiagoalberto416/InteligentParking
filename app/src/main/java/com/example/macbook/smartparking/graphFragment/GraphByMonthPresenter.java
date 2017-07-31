@@ -3,10 +3,10 @@ package com.example.macbook.smartparking.graphFragment;
 import android.content.Context;
 import android.util.Log;
 
-import com.example.macbook.smartparking.R;
 import com.example.macbook.smartparking.data.graphs.first.DataToGraph;
 import com.example.macbook.smartparking.data.graphs.first.GraphByDayInterface;
 import com.example.macbook.smartparking.data.graphs.first.GraphByDayResponse;
+import com.example.macbook.smartparking.data.graphs.first.GraphByMonthInterface;
 import com.example.macbook.smartparking.data.graphs.first.Hour;
 import com.example.macbook.smartparking.mainFragment.MainViewFragment;
 import com.google.gson.FieldNamingPolicy;
@@ -23,14 +23,14 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
- * Created by macbook on 26/06/17.
+ * Created by macbook on 11/07/17.
  */
 
-public class GraphPresenter {
+public class GraphByMonthPresenter {
 
     private MainViewFragment mainview;
 
-    public GraphPresenter(MainViewFragment mainview) {
+    public GraphByMonthPresenter(MainViewFragment mainview) {
         this.mainview = mainview;
     }
 
@@ -44,7 +44,7 @@ public class GraphPresenter {
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
 
-        GraphByDayInterface restClient = retrofit.create(GraphByDayInterface.class);
+        GraphByMonthInterface restClient = retrofit.create(GraphByMonthInterface.class);
         mainview.showLoading();
         DataToGraph graph = new DataToGraph("2017-07-05");
         Call<GraphByDayResponse> call = restClient.postJson(graph);

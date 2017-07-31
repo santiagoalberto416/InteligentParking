@@ -10,6 +10,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.macbook.smartparking.R;
+import com.example.macbook.smartparking.graphFragment.GraphByMonthFragment;
+import com.example.macbook.smartparking.graphFragment.GraphFragment;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -31,7 +36,10 @@ public class GraphContainerFragment extends Fragment {
         // Inflate the layout for this fragment
 
         View view = inflater.inflate(R.layout.fragment_graph_container, container, false);;
-        mCustomPagerAdapter = new GraphsAdapter(getChildFragmentManager(), getActivity());
+        List<String> classes = new ArrayList<>();
+        classes.add(GraphFragment.class.getName());
+        classes.add(GraphByMonthFragment.class.getName());
+        mCustomPagerAdapter = new GraphsAdapter(getChildFragmentManager(), classes, getActivity());
 
         mViewPager = (ViewPager) view.findViewById(R.id.pager);
         mViewPager.setAdapter(mCustomPagerAdapter);

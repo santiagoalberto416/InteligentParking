@@ -1,12 +1,10 @@
 
 package com.example.macbook.smartparking.data.graphs.first;
 
-import com.example.macbook.smartparking.data.graphs.first.Analytics;
-
 import java.util.HashMap;
 import java.util.Map;
 
-public class FirstGraphResponse {
+public class GraphByDayResponse {
 
     private Analytics analytics;
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();

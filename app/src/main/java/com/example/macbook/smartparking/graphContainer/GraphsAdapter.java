@@ -6,7 +6,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import com.example.macbook.smartparking.graphFragment.GraphByMonthFragment;
 import com.example.macbook.smartparking.graphFragment.GraphFragment;
+
+import java.util.List;
+
+import static android.drm.DrmStore.DrmObjectType.CONTENT;
 
 /**
  * Created by macbook on 26/06/17.
@@ -14,38 +19,35 @@ import com.example.macbook.smartparking.graphFragment.GraphFragment;
 class GraphsAdapter extends FragmentPagerAdapter {
 
     Context mContext;
+    public List<String> fragmentsA;
 
-    public GraphsAdapter(FragmentManager fm, Context context) {
+    public GraphsAdapter(FragmentManager fm, List<String> fragments, Context context) {
         super(fm);
+        fragmentsA = fragments;
         mContext = context;
     }
 
     @Override
     public Fragment getItem(int position) {
+        //return MyFragment.newInstance();
+        return Fragment.instantiate(mContext, fragmentsA.get(position));
 
-        // Create fragment object
-        Fragment fragment = new GraphFragment();
-
-        // Attach some data to the fragment
-        // that we'll use to populate our fragment layouts
-        Bundle args = new Bundle();
-        args.putInt("page_position", position + 1);
-
-        // Set the arguments on the fragment
-        // that will be fetched in the
-        // DemoFragment@onCreateView
-        fragment.setArguments(args);
-
-        return fragment;
     }
+
 
     @Override
     public int getCount() {
-        return 3;
+        // return CONTENT.length;
+        return fragmentsA.size();
+    }
+
+    @Override
+    public int getItemPosition(Object object) {
+        return POSITION_NONE;
     }
 
     @Override
     public CharSequence getPageTitle(int position) {
-        return "Page " + (position + 1);
+        return "Graph " + (position + 1);
     }
 }

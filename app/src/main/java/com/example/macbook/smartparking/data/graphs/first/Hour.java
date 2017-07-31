@@ -6,15 +6,15 @@ import java.util.Map;
 
 public class Hour {
 
-    private Integer amount;
+    private Double amount;
     private String hour;
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
-    public Integer getAmount() {
+    public Double getAmount() {
         return amount;
     }
 
-    public void setAmount(Integer amount) {
+    public void setAmount(Double amount) {
         this.amount = amount;
     }
 

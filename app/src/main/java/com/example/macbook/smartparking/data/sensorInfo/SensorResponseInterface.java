@@ -8,7 +8,7 @@ import retrofit2.http.GET;
  */
 
 public interface SensorResponseInterface {
-    @GET("one")
+    @GET("latestActivity")
     Call<MainAdminResponse> getData();
 
 }

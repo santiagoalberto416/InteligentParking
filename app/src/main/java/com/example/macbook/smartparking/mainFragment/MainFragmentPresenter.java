@@ -43,7 +43,7 @@ public class MainFragmentPresenter {
                 .create();
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(context.getResources().getString(R.string.server_url))
+                .baseUrl("http://sparkingsystem.info/api/")
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
 

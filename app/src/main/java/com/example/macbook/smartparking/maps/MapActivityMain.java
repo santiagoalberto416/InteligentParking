@@ -58,7 +58,7 @@ public class MapActivityMain extends Activity implements OnMapReadyCallback {
         setContentView(R.layout.fragment_blank);
         id = getIntent().getIntExtra("id", 0);
 
-        MapWorkerSingleton.getInstance().getContent(getString(R.string.server_url)+"five", this);
+        MapWorkerSingleton.getInstance().getContent("http://sparkingsystem.info/api/geojson", this);
         progress = ProgressDialog.show(this, "Getting Data ...", "Waiting For Results...", true);
         registerReceiver(receiver, new IntentFilter(MapWorkerSingleton.ACTION_FOR_INTENT_CALLBACK));
         MapFragment mapFragment = (MapFragment) this.getFragmentManager()

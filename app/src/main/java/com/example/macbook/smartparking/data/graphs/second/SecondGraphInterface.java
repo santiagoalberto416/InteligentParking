@@ -1,7 +1,5 @@
 package com.example.macbook.smartparking.data.graphs.second;
 
-import com.example.macbook.smartparking.data.graphs.first.FirstGraphResponse;
-
 import retrofit2.Call;
 import retrofit2.http.GET;
 
