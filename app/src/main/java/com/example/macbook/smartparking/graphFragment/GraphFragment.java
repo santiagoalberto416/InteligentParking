@@ -5,11 +5,14 @@ import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 
+import com.example.macbook.smartparking.HomeScreenAdministrator;
 import com.example.macbook.smartparking.R;
 import com.example.macbook.smartparking.data.sensorInfo.Sensor;
 import com.example.macbook.smartparking.mainFragment.MainViewFragment;
@@ -35,6 +38,8 @@ public class GraphFragment extends Fragment implements DatePickerDialog.OnDateSe
     LineChartView mChart;
     Button pickDateButton;
     GraphPresenter presenter;
+    RelativeLayout progress;
+
 
     public GraphFragment() {
 
@@ -48,6 +53,7 @@ public class GraphFragment extends Fragment implements DatePickerDialog.OnDateSe
         View view = inflater.inflate(R.layout.fragment_graph, container, false);
         pickDateButton = (Button)view.findViewById(R.id.pickDateButton);
         mChart = (LineChartView) view.findViewById(R.id.chart);
+        progress = (RelativeLayout)view.findViewById(R.id.progresView);
         presenter = new GraphPresenter(this);
         pickDateButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,16 +65,39 @@ public class GraphFragment extends Fragment implements DatePickerDialog.OnDateSe
                         now.get(Calendar.MONTH),
                         now.get(Calendar.DAY_OF_MONTH)
                 );
+                dpd.setOnDateSetListener(GraphFragment.this);
                 dpd.show(getActivity().getFragmentManager(), "Datepickerdialog");
+
             }
         });
-        presenter.getData(getActivity(), getString(R.string.graph_by_day));
+        String date = ((HomeScreenAdministrator)getActivity()).getDateFragment(0);
+        if(!date.equals("")) {
+            presenter.getData(getActivity(), getString(R.string.graph_by_day), date);
+        }else {
+            ((HomeScreenAdministrator)getActivity()).setDateFragment(GraphByBlockFragment.getDateToday(), 0);
+            presenter.getData(getActivity(), getString(R.string.graph_by_day), GraphByBlockFragment.getDateToday());
+        }
+        showLoading();
         return view;
     }
 
     @Override
     public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
-
+        String month = "";
+        if(monthOfYear < 10){
+            month = "0"+(monthOfYear+1);
+        }else {
+            month = (monthOfYear+1)+"";
+        }
+        String day = "";
+        if(dayOfMonth < 10){
+            day = "0"+dayOfMonth;
+        }else {
+            day = dayOfMonth+"";
+        }
+        Log.d("dateselected", year+"-"+month+"-"+day);
+        ((HomeScreenAdministrator)getActivity()).setDateFragment(year+"-"+month+"-"+day, 0);
+        presenter.getData(getActivity(), getString(R.string.graph_by_day), year+"-"+month+"-"+day);
     }
 
     private void setData(List<Float> datas) {
@@ -95,12 +124,12 @@ public class GraphFragment extends Fragment implements DatePickerDialog.OnDateSe
 
     @Override
     public void hideLoading() {
-
+        progress.setVisibility(View.GONE);
     }
 
     @Override
     public void showLoading() {
-
+        progress.setVisibility(View.VISIBLE);
     }
 
     @Override

@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 
 import com.example.macbook.smartparking.R;
 import com.example.macbook.smartparking.data.map.RestTask;
@@ -75,6 +76,8 @@ public class FullMapActivity extends AppCompatActivity implements OnMapReadyCall
             @Override
             public void onClick(View v) {
                 Dialog dialog = new Dialog(FullMapActivity.this);
+
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 dialog.setContentView(R.layout.instructions_layout);
                 dialog.show();
             }

@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.macbook.smartparking.R;
+import com.example.macbook.smartparking.graphFragment.GraphByBlockFragment;
 import com.example.macbook.smartparking.graphFragment.GraphByMonthFragment;
 import com.example.macbook.smartparking.graphFragment.GraphFragment;
 
@@ -39,6 +40,7 @@ public class GraphContainerFragment extends Fragment {
         List<String> classes = new ArrayList<>();
         classes.add(GraphFragment.class.getName());
         classes.add(GraphByMonthFragment.class.getName());
+        classes.add(GraphByBlockFragment.class.getName());
         mCustomPagerAdapter = new GraphsAdapter(getChildFragmentManager(), classes, getActivity());
 
         mViewPager = (ViewPager) view.findViewById(R.id.pager);

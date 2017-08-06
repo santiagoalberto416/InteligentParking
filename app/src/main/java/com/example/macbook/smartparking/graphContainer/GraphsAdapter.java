@@ -29,7 +29,6 @@ class GraphsAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        //return MyFragment.newInstance();
         return Fragment.instantiate(mContext, fragmentsA.get(position));
 
     }

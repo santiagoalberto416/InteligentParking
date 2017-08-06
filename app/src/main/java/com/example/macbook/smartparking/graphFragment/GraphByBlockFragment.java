@@ -1,24 +1,22 @@
 package com.example.macbook.smartparking.graphFragment;
 
-/**
- * Created by macbook on 11/07/17.
- */
-
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 
+import com.example.macbook.smartparking.HomeScreenAdministrator;
 import com.example.macbook.smartparking.R;
-import com.example.macbook.smartparking.data.graphs.first.GraphByMonthInterface;
 import com.example.macbook.smartparking.data.sensorInfo.Sensor;
 import com.example.macbook.smartparking.mainFragment.MainViewFragment;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -28,19 +26,18 @@ import lecho.lib.hellocharts.model.LineChartData;
 import lecho.lib.hellocharts.model.PointValue;
 import lecho.lib.hellocharts.view.LineChartView;
 
-
-
 /**
- * A simple {@link Fragment} subclass.
+ * Created by macbook on 05/08/17.
  */
-public class GraphByMonthFragment extends Fragment implements DatePickerDialog.OnDateSetListener, MainViewFragment {
+
+public class GraphByBlockFragment extends Fragment implements DatePickerDialog.OnDateSetListener, MainViewFragment {
 
     LineChartView mChart;
     Button pickDateButton;
-    GraphByMonthPresenter presenter;
+    GraphByBlockPresenter presenter;
     RelativeLayout progress;
 
-    public GraphByMonthFragment() {
+    public GraphByBlockFragment() {
 
     }
 
@@ -52,28 +49,56 @@ public class GraphByMonthFragment extends Fragment implements DatePickerDialog.O
         View view = inflater.inflate(R.layout.fragment_graph, container, false);
         pickDateButton = (Button)view.findViewById(R.id.pickDateButton);
         mChart = (LineChartView) view.findViewById(R.id.chart);
-        presenter = new GraphByMonthPresenter(this);
+        presenter = new GraphByBlockPresenter(this);
         progress = (RelativeLayout)view.findViewById(R.id.progresView);
         pickDateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Calendar now = Calendar.getInstance();
                 DatePickerDialog dpd = DatePickerDialog.newInstance(
-                        GraphByMonthFragment.this,
+                        GraphByBlockFragment.this,
                         now.get(Calendar.YEAR),
                         now.get(Calendar.MONTH),
                         now.get(Calendar.DAY_OF_MONTH)
                 );
+                dpd.setOnDateSetListener(GraphByBlockFragment.this);
                 dpd.show(getActivity().getFragmentManager(), "Datepickerdialog");
             }
         });
-        presenter.getData(getActivity(), getString(R.string.graph_by_day));
+        String date = ((HomeScreenAdministrator)getActivity()).getDateFragment(2);
+        if(!date.equals("")) {
+            presenter.getData(getActivity(), getString(R.string.graph_by_day), date);
+        }else {
+            ((HomeScreenAdministrator)getActivity()).setDateFragment(GraphByBlockFragment.getDateToday(), 2);
+            presenter.getData(getActivity(), getString(R.string.graph_by_day), GraphByBlockFragment.getDateToday());
+        }
         return view;
     }
 
     @Override
     public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
+        String month = "";
+        if(monthOfYear < 10){
+            month = "0"+(monthOfYear+1);
+        }else {
+            month = (monthOfYear+1)+"";
+        }
+        String day = "";
+        if(dayOfMonth < 10){
+            day = "0"+dayOfMonth;
+        }else {
+            day = dayOfMonth+"";
+        }
+        Log.d("dateselected", year+"-"+month+"-"+day);
+        ((HomeScreenAdministrator)getActivity()).setDateFragment(year+"-"+month+"-"+day, 2);
+        presenter.getData(getActivity(), getString(R.string.graph_by_day), year+"-"+monthOfYear+"-"+dayOfMonth);
+    }
 
+    public static String getDateToday(){
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DATE, 1);
+        SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
+        return format1.format(cal.getTime());
     }
 
     private void setData(List<Float> datas) {

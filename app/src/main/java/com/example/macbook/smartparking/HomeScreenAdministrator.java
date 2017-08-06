@@ -28,6 +28,9 @@ public class HomeScreenAdministrator extends AppCompatActivity implements OnGrap
     MainFragment fragment;
 
 
+    String [] fragmentsDate = {"", "", ""};
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +45,14 @@ public class HomeScreenAdministrator extends AppCompatActivity implements OnGrap
             ft.add(R.id.fragmentContainer, fragment, null);
             ft.commit();
         }
+    }
+
+    public void setDateFragment(String dateFragment, int position){
+        fragmentsDate[position] = dateFragment;
+    }
+
+    public String getDateFragment(int position){
+        return fragmentsDate[position];
     }
 
     @Override
