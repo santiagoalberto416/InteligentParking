@@ -44,8 +44,20 @@ public class HomeScreenAdministrator extends AppCompatActivity implements OnGrap
             fragment.setListener(this);
             ft.add(R.id.fragmentContainer, fragment, null);
             ft.commit();
+        }else{
+            fragmentsDate = savedInstanceState.getStringArray("dates");
         }
     }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        // Save the user's current game state
+        savedInstanceState.putStringArray("dates", fragmentsDate);
+
+        // Always call the superclass so it can save the view hierarchy state
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
 
     public void setDateFragment(String dateFragment, int position){
         fragmentsDate[position] = dateFragment;

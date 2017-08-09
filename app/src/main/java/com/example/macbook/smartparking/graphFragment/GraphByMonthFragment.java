@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.example.macbook.smartparking.R;
 import com.example.macbook.smartparking.data.graphs.first.GraphByMonthInterface;
@@ -39,6 +40,8 @@ public class GraphByMonthFragment extends Fragment implements DatePickerDialog.O
     Button pickDateButton;
     GraphByMonthPresenter presenter;
     RelativeLayout progress;
+    TextView dateTextView;
+
 
     public GraphByMonthFragment() {
 
@@ -54,6 +57,7 @@ public class GraphByMonthFragment extends Fragment implements DatePickerDialog.O
         mChart = (LineChartView) view.findViewById(R.id.chart);
         presenter = new GraphByMonthPresenter(this);
         progress = (RelativeLayout)view.findViewById(R.id.progresView);
+        dateTextView = (TextView)view.findViewById(R.id.date);
         pickDateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

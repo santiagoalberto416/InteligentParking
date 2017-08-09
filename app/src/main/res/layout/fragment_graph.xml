@@ -24,7 +24,6 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:layout_above="@+id/pickDateButton"
-        android:text="22 de agosto del 2012"
         />
 
     <Button

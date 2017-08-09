@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.example.macbook.smartparking.HomeScreenAdministrator;
 import com.example.macbook.smartparking.R;
@@ -39,6 +40,7 @@ public class GraphFragment extends Fragment implements DatePickerDialog.OnDateSe
     Button pickDateButton;
     GraphPresenter presenter;
     RelativeLayout progress;
+    TextView dateTextView;
 
 
     public GraphFragment() {
@@ -54,6 +56,7 @@ public class GraphFragment extends Fragment implements DatePickerDialog.OnDateSe
         pickDateButton = (Button)view.findViewById(R.id.pickDateButton);
         mChart = (LineChartView) view.findViewById(R.id.chart);
         progress = (RelativeLayout)view.findViewById(R.id.progresView);
+        dateTextView = (TextView)view.findViewById(R.id.date);
         presenter = new GraphPresenter(this);
         pickDateButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,9 +76,11 @@ public class GraphFragment extends Fragment implements DatePickerDialog.OnDateSe
         String date = ((HomeScreenAdministrator)getActivity()).getDateFragment(0);
         if(!date.equals("")) {
             presenter.getData(getActivity(), getString(R.string.graph_by_day), date);
+            dateTextView.setText(date);
         }else {
             ((HomeScreenAdministrator)getActivity()).setDateFragment(GraphByBlockFragment.getDateToday(), 0);
             presenter.getData(getActivity(), getString(R.string.graph_by_day), GraphByBlockFragment.getDateToday());
+            dateTextView.setText( GraphByBlockFragment.getDateToday());
         }
         showLoading();
         return view;
@@ -98,6 +103,7 @@ public class GraphFragment extends Fragment implements DatePickerDialog.OnDateSe
         Log.d("dateselected", year+"-"+month+"-"+day);
         ((HomeScreenAdministrator)getActivity()).setDateFragment(year+"-"+month+"-"+day, 0);
         presenter.getData(getActivity(), getString(R.string.graph_by_day), year+"-"+month+"-"+day);
+        dateTextView.setText(year+"-"+month+"-"+day);
     }
 
     private void setData(List<Float> datas) {

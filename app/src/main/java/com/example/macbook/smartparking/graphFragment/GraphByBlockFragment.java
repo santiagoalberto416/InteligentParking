@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.example.macbook.smartparking.HomeScreenAdministrator;
 import com.example.macbook.smartparking.R;
@@ -36,6 +37,7 @@ public class GraphByBlockFragment extends Fragment implements DatePickerDialog.O
     Button pickDateButton;
     GraphByBlockPresenter presenter;
     RelativeLayout progress;
+    TextView dateTextView;
 
     public GraphByBlockFragment() {
 
@@ -51,6 +53,7 @@ public class GraphByBlockFragment extends Fragment implements DatePickerDialog.O
         mChart = (LineChartView) view.findViewById(R.id.chart);
         presenter = new GraphByBlockPresenter(this);
         progress = (RelativeLayout)view.findViewById(R.id.progresView);
+        dateTextView = (TextView)view.findViewById(R.id.date);
         pickDateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -68,9 +71,12 @@ public class GraphByBlockFragment extends Fragment implements DatePickerDialog.O
         String date = ((HomeScreenAdministrator)getActivity()).getDateFragment(2);
         if(!date.equals("")) {
             presenter.getData(getActivity(), getString(R.string.graph_by_day), date);
+            dateTextView.setText(date);
         }else {
-            ((HomeScreenAdministrator)getActivity()).setDateFragment(GraphByBlockFragment.getDateToday(), 2);
-            presenter.getData(getActivity(), getString(R.string.graph_by_day), GraphByBlockFragment.getDateToday());
+            String dateSelected = GraphByBlockFragment.getDateToday();
+            ((HomeScreenAdministrator)getActivity()).setDateFragment(dateSelected, 2);
+            presenter.getData(getActivity(), getString(R.string.graph_by_day), dateSelected);
+            dateTextView.setText(dateSelected);
         }
         return view;
     }
@@ -90,8 +96,10 @@ public class GraphByBlockFragment extends Fragment implements DatePickerDialog.O
             day = dayOfMonth+"";
         }
         Log.d("dateselected", year+"-"+month+"-"+day);
-        ((HomeScreenAdministrator)getActivity()).setDateFragment(year+"-"+month+"-"+day, 2);
-        presenter.getData(getActivity(), getString(R.string.graph_by_day), year+"-"+monthOfYear+"-"+dayOfMonth);
+        String fullDate = year+"-"+month+"-"+day;
+        ((HomeScreenAdministrator)getActivity()).setDateFragment(fullDate, 2);
+        presenter.getData(getActivity(), getString(R.string.graph_by_day), fullDate);
+        dateTextView.setText(fullDate);
     }
 
     public static String getDateToday(){
@@ -141,4 +149,5 @@ public class GraphByBlockFragment extends Fragment implements DatePickerDialog.O
         setData(chartSets);
         hideLoading();
     }
+
 }

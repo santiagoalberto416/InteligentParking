@@ -19,12 +19,14 @@ import static android.drm.DrmStore.DrmObjectType.CONTENT;
 class GraphsAdapter extends FragmentPagerAdapter {
 
     Context mContext;
+    private String[] titles;
     public List<String> fragmentsA;
 
-    public GraphsAdapter(FragmentManager fm, List<String> fragments, Context context) {
+    public GraphsAdapter(FragmentManager fm, List<String> fragments, Context context, String [] titles) {
         super(fm);
         fragmentsA = fragments;
         mContext = context;
+        this.titles = titles;
     }
 
     @Override
@@ -47,6 +49,6 @@ class GraphsAdapter extends FragmentPagerAdapter {
 
     @Override
     public CharSequence getPageTitle(int position) {
-        return "Graph " + (position + 1);
+        return titles[position];
     }
 }
