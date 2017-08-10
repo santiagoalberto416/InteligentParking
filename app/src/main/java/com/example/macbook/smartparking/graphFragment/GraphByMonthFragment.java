@@ -6,6 +6,7 @@ package com.example.macbook.smartparking.graphFragment;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,7 +38,7 @@ import lecho.lib.hellocharts.view.LineChartView;
 public class GraphByMonthFragment extends Fragment implements DatePickerDialog.OnDateSetListener, MainViewFragment {
 
     LineChartView mChart;
-    Button pickDateButton;
+    FloatingActionButton pickDateButton;
     GraphByMonthPresenter presenter;
     RelativeLayout progress;
     TextView dateTextView;
@@ -53,7 +54,7 @@ public class GraphByMonthFragment extends Fragment implements DatePickerDialog.O
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_graph, container, false);
-        pickDateButton = (Button)view.findViewById(R.id.pickDateButton);
+        pickDateButton = (FloatingActionButton)view.findViewById(R.id.pickDateButton);
         mChart = (LineChartView) view.findViewById(R.id.chart);
         presenter = new GraphByMonthPresenter(this);
         progress = (RelativeLayout)view.findViewById(R.id.progresView);
@@ -72,6 +73,15 @@ public class GraphByMonthFragment extends Fragment implements DatePickerDialog.O
             }
         });
         presenter.getData(getActivity(), getString(R.string.graph_by_day));
+
+        /**
+         * aqui se definen los labels
+         */
+        TextView labelLeft = (TextView)view.findViewById(R.id.labelLeft);
+        TextView labelBottom = (TextView)view.findViewById(R.id.labelBottom);
+        labelLeft.setText("Carros");
+        labelBottom.setText("Horas (0 a 24 hrs)");
+
         return view;
     }
 
@@ -82,9 +92,19 @@ public class GraphByMonthFragment extends Fragment implements DatePickerDialog.O
 
     private void setData(List<Float> datas) {
         List<PointValue> values = new ArrayList<PointValue>();
-
+        Boolean thereValues = false;
         for (int i = 0; i < datas.size(); i++) {
-            values.add(new PointValue(i, datas.get(i)));
+            float val = datas.get(i);
+            if(val > 0) {
+                thereValues = true;
+            }
+            values.add(new PointValue(i, val));
+        }
+
+        if(!thereValues){
+            getView().findViewById(R.id.noData).setVisibility(View.VISIBLE);
+        }else{
+            getView().findViewById(R.id.noData).setVisibility(View.GONE);
         }
 
         Line line = new Line(values)
@@ -97,9 +117,9 @@ public class GraphByMonthFragment extends Fragment implements DatePickerDialog.O
         LineChartData data = new LineChartData();
         data.setLines(lines);
 
+
         mChart.setLineChartData(data);
     }
-
     @Override
     public void hideLoading() {
         progress.setVisibility(View.GONE);

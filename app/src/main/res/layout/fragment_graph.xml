@@ -2,14 +2,43 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.example.macbook.smartparking.graphFragment.GraphFragment"
     android:background="@android:color/white">
 
     <!-- TODO: Update blank fragment layout -->
 
+    <LinearLayout
+        android:id="@+id/noData"
+        android:visibility="gone"
+        android:layout_centerInParent="true"
+        android:layout_width="200dp"
+        android:layout_height="160dp"
+        android:elevation="8dp"
+        android:background="@color/primary"
+        >
+
+        <TextView
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:layout_width="match_parent"
+            android:gravity="center"
+            android:layout_height="wrap_content"
+            android:textColor="#FFF"
+            android:text="No hay datos registrados"/>
+
+    </LinearLayout>
+
+    <com.example.macbook.smartparking.VerticalTextView
+        android:id="@+id/labelLeft"
+        android:layout_width="20dp"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:text="Hours"/>
+
     <RelativeLayout
+        android:layout_marginLeft="25dp"
         android:layout_width="match_parent"
-        android:layout_above="@+id/date"
+        android:layout_above="@+id/labelBottom"
         android:layout_height="match_parent">
         <lecho.lib.hellocharts.view.LineChartView
             android:id="@+id/chart"
@@ -17,22 +46,36 @@
             android:layout_height="match_parent"/>
     </RelativeLayout>
 
+    <TextView
+        android:layout_centerHorizontal="true"
+        android:id="@+id/labelBottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/date"
+        android:text="Blocks"/>
+
+
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/pickDateButton"
+        android:layout_width="52dp"
+        android:layout_height="52dp"
+        android:layout_gravity="bottom|right"
+        android:layout_margin="14dp"
+        android:src="@drawable/ic_action_calendar_day"
+        android:tint="@android:color/white"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true" />
+
 
     <TextView
         android:id="@+id/date"
+        android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:layout_above="@+id/pickDateButton"
         />
 
-    <Button
-        android:layout_alignParentBottom="true"
-        android:id="@+id/pickDateButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Selecciona fecha"
-        android:textAllCaps="false"/>
 
     <RelativeLayout
         android:visibility="gone"

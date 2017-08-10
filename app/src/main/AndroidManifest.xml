@@ -23,8 +23,6 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAYgaKZjvt3PriPTcbzxt_l4thnhIsYxxM" />
 
-        <activity android:name=".MainActivity" />
-
         <uses-feature
             android:glEsVersion="0x00020000"
             android:required="true" />

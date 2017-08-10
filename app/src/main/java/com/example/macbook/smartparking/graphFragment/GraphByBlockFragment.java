@@ -2,6 +2,7 @@ package com.example.macbook.smartparking.graphFragment;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -34,10 +35,10 @@ import lecho.lib.hellocharts.view.LineChartView;
 public class GraphByBlockFragment extends Fragment implements DatePickerDialog.OnDateSetListener, MainViewFragment {
 
     LineChartView mChart;
-    Button pickDateButton;
-    GraphByBlockPresenter presenter;
+    FloatingActionButton pickDateButton;
     RelativeLayout progress;
     TextView dateTextView;
+    GraphByBlockPresenter presenter;
 
     public GraphByBlockFragment() {
 
@@ -49,11 +50,15 @@ public class GraphByBlockFragment extends Fragment implements DatePickerDialog.O
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_graph, container, false);
-        pickDateButton = (Button)view.findViewById(R.id.pickDateButton);
+        pickDateButton = (FloatingActionButton)view.findViewById(R.id.pickDateButton);
         mChart = (LineChartView) view.findViewById(R.id.chart);
-        presenter = new GraphByBlockPresenter(this);
         progress = (RelativeLayout)view.findViewById(R.id.progresView);
         dateTextView = (TextView)view.findViewById(R.id.date);
+        return view;
+    }
+
+    @Override
+    public void onResume() {
         pickDateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -69,6 +74,8 @@ public class GraphByBlockFragment extends Fragment implements DatePickerDialog.O
             }
         });
         String date = ((HomeScreenAdministrator)getActivity()).getDateFragment(2);
+        Log.e("DEBUG", "onResume of HomeFragment");
+        presenter = new GraphByBlockPresenter(this);
         if(!date.equals("")) {
             presenter.getData(getActivity(), getString(R.string.graph_by_day), date);
             dateTextView.setText(date);
@@ -78,7 +85,17 @@ public class GraphByBlockFragment extends Fragment implements DatePickerDialog.O
             presenter.getData(getActivity(), getString(R.string.graph_by_day), dateSelected);
             dateTextView.setText(dateSelected);
         }
-        return view;
+
+        /**
+         * aqui se definen los labels
+         */
+        TextView labelLeft = (TextView)getView().findViewById(R.id.labelLeft);
+        TextView labelBottom = (TextView)getView().findViewById(R.id.labelBottom);
+        labelLeft.setText("Carros por mes");
+        labelBottom.setText("Bloques");
+
+
+        super.onResume();
     }
 
     @Override
@@ -111,9 +128,19 @@ public class GraphByBlockFragment extends Fragment implements DatePickerDialog.O
 
     private void setData(List<Float> datas) {
         List<PointValue> values = new ArrayList<PointValue>();
-
+        Boolean thereValues = false;
         for (int i = 0; i < datas.size(); i++) {
-            values.add(new PointValue(i, datas.get(i)));
+            float val = datas.get(i);
+            if(val > 0) {
+                thereValues = true;
+            }
+            values.add(new PointValue(i, val));
+        }
+
+        if(!thereValues && getView()!=null){
+            getView().findViewById(R.id.noData).setVisibility(View.VISIBLE);
+        }else if (getView()!=null){
+            getView().findViewById(R.id.noData).setVisibility(View.GONE);
         }
 
         Line line = new Line(values)
@@ -125,6 +152,7 @@ public class GraphByBlockFragment extends Fragment implements DatePickerDialog.O
 
         LineChartData data = new LineChartData();
         data.setLines(lines);
+
 
         mChart.setLineChartData(data);
     }
