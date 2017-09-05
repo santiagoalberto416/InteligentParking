@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -121,9 +122,9 @@ public class FullMapActivity extends AppCompatActivity implements OnMapReadyCall
                                 String state = feature.getProperty("state").toString();
                                 GeoJsonPolygonStyle style = new GeoJsonPolygonStyle();
                                 if(state.equals("free")){
-                                    style.setFillColor(getColor(android.R.color.holo_green_dark));
+                                    style.setFillColor(ContextCompat.getColor(FullMapActivity.this, android.R.color.holo_green_dark));
                                 }else{
-                                    style.setFillColor(getColor(android.R.color.holo_red_dark));
+                                    style.setFillColor(ContextCompat.getColor(FullMapActivity.this, android.R.color.holo_red_dark));
                                 }
                                 feature.setPolygonStyle(style);
                                 layer.addFeature(feature);
@@ -180,9 +181,9 @@ public class FullMapActivity extends AppCompatActivity implements OnMapReadyCall
                     if(id==idFeature){
                         GeoJsonPolygonStyle style = new GeoJsonPolygonStyle();
                         if(state.equals("free")){
-                            style.setFillColor(getColor(android.R.color.holo_green_dark));
+                            style.setFillColor(ContextCompat.getColor(FullMapActivity.this, android.R.color.holo_green_dark));
                         }else if(state.equals("ocupated")){
-                            style.setFillColor(getColor(android.R.color.holo_red_dark));
+                            style.setFillColor(ContextCompat.getColor(FullMapActivity.this,android.R.color.holo_red_dark));
                         }else if(state.equals("parking")){
                             style.setFillColor(Color.YELLOW);
                         }

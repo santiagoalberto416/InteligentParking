@@ -11,13 +11,12 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.macbook.smartparking.R;
-import com.example.macbook.smartparking.data.graphs.first.GraphByMonthInterface;
 import com.example.macbook.smartparking.data.sensorInfo.Sensor;
+import com.example.macbook.smartparking.graph.DataWorker;
 import com.example.macbook.smartparking.mainFragment.MainViewFragment;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
@@ -39,7 +38,7 @@ public class GraphByMonthFragment extends Fragment implements DatePickerDialog.O
 
     LineChartView mChart;
     FloatingActionButton pickDateButton;
-    GraphByMonthPresenter presenter;
+    DataWorker worker;
     RelativeLayout progress;
     TextView dateTextView;
 
@@ -56,7 +55,7 @@ public class GraphByMonthFragment extends Fragment implements DatePickerDialog.O
         View view = inflater.inflate(R.layout.fragment_graph, container, false);
         pickDateButton = (FloatingActionButton)view.findViewById(R.id.pickDateButton);
         mChart = (LineChartView) view.findViewById(R.id.chart);
-        presenter = new GraphByMonthPresenter(this);
+        worker = new DataWorker();
         progress = (RelativeLayout)view.findViewById(R.id.progresView);
         dateTextView = (TextView)view.findViewById(R.id.date);
         pickDateButton.setOnClickListener(new View.OnClickListener() {
@@ -72,7 +71,7 @@ public class GraphByMonthFragment extends Fragment implements DatePickerDialog.O
                 dpd.show(getActivity().getFragmentManager(), "Datepickerdialog");
             }
         });
-        presenter.getData(getActivity(), getString(R.string.graph_by_day));
+        worker.getDataByMonth("", this);
 
         /**
          * aqui se definen los labels

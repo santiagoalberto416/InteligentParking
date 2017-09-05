@@ -1,8 +1,6 @@
 package com.example.macbook.smartparking.graphFragment;
 
-
 import android.graphics.Color;
-import android.graphics.DashPathEffect;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -10,7 +8,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -25,18 +22,16 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import lecho.lib.hellocharts.model.Axis;
-import lecho.lib.hellocharts.model.AxisValue;
 import lecho.lib.hellocharts.model.Line;
 import lecho.lib.hellocharts.model.LineChartData;
 import lecho.lib.hellocharts.model.PointValue;
 import lecho.lib.hellocharts.view.LineChartView;
 
-
 /**
- * A simple {@link Fragment} subclass.
+ * Created by skirk on 9/5/17.
  */
-public class GraphFragment extends Fragment implements DatePickerDialog.OnDateSetListener, MainViewFragment {
+
+public class GraphFragmentGeneric  extends Fragment implements DatePickerDialog.OnDateSetListener, MainViewFragment {
 
     LineChartView mChart;
     FloatingActionButton pickDateButton;
@@ -46,7 +41,7 @@ public class GraphFragment extends Fragment implements DatePickerDialog.OnDateSe
     TextView dateTextView;
 
 
-    public GraphFragment() {
+    public GraphFragmentGeneric() {
 
     }
 
@@ -66,12 +61,12 @@ public class GraphFragment extends Fragment implements DatePickerDialog.OnDateSe
             public void onClick(View v) {
                 Calendar now = Calendar.getInstance();
                 DatePickerDialog dpd = DatePickerDialog.newInstance(
-                        GraphFragment.this,
+                        GraphFragmentGeneric.this,
                         now.get(Calendar.YEAR),
                         now.get(Calendar.MONTH),
                         now.get(Calendar.DAY_OF_MONTH)
                 );
-                dpd.setOnDateSetListener(GraphFragment.this);
+                dpd.setOnDateSetListener(GraphFragmentGeneric.this);
                 dpd.show(getActivity().getFragmentManager(), "Datepickerdialog");
 
             }
@@ -103,10 +98,15 @@ public class GraphFragment extends Fragment implements DatePickerDialog.OnDateSe
         }else {
             day = dayOfMonth+"";
         }
-        Log.d("dateselected", year+"-"+month+"-"+day);
         ((HomeScreenAdministrator)getActivity()).setDateFragment(year+"-"+month+"-"+day, 0);
         worker.getData(year+"-"+month+"-"+day, this);
         dateTextView.setText(year+"-"+month+"-"+day);
+    }
+
+    public void setLabelForType(String type){
+        switch (type){
+
+        }
     }
 
     private void setData(List<Float> datas) {
@@ -115,7 +115,7 @@ public class GraphFragment extends Fragment implements DatePickerDialog.OnDateSe
         for (int i = 0; i < datas.size(); i++) {
             float val = datas.get(i);
             if(val > 0) {
-             thereValues = true;
+                thereValues = true;
             }
             values.add(new PointValue(i, val));
         }
@@ -171,6 +171,6 @@ public class GraphFragment extends Fragment implements DatePickerDialog.OnDateSe
 
     @Override
     public void showDataFromServerCharset(List<Float> chartSets) {
-            setData(chartSets);
+        setData(chartSets);
     }
 }

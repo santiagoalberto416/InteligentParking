@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.example.macbook.smartparking.HomeScreenAdministrator;
 import com.example.macbook.smartparking.R;
 import com.example.macbook.smartparking.data.sensorInfo.Sensor;
+import com.example.macbook.smartparking.graph.DataWorker;
 import com.example.macbook.smartparking.mainFragment.MainViewFragment;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
@@ -38,7 +39,7 @@ public class GraphByBlockFragment extends Fragment implements DatePickerDialog.O
     FloatingActionButton pickDateButton;
     RelativeLayout progress;
     TextView dateTextView;
-    GraphByBlockPresenter presenter;
+    DataWorker presenter;
 
     public GraphByBlockFragment() {
 
@@ -75,14 +76,14 @@ public class GraphByBlockFragment extends Fragment implements DatePickerDialog.O
         });
         String date = ((HomeScreenAdministrator)getActivity()).getDateFragment(2);
         Log.e("DEBUG", "onResume of HomeFragment");
-        presenter = new GraphByBlockPresenter(this);
+        presenter = new DataWorker();
         if(!date.equals("")) {
-            presenter.getData(getActivity(), getString(R.string.graph_by_day), date);
+            presenter.getDataByBlock(date, this);
             dateTextView.setText(date);
         }else {
             String dateSelected = GraphByBlockFragment.getDateToday();
             ((HomeScreenAdministrator)getActivity()).setDateFragment(dateSelected, 2);
-            presenter.getData(getActivity(), getString(R.string.graph_by_day), dateSelected);
+            presenter.getDataByBlock(dateSelected, this);
             dateTextView.setText(dateSelected);
         }
 
@@ -115,7 +116,7 @@ public class GraphByBlockFragment extends Fragment implements DatePickerDialog.O
         Log.d("dateselected", year+"-"+month+"-"+day);
         String fullDate = year+"-"+month+"-"+day;
         ((HomeScreenAdministrator)getActivity()).setDateFragment(fullDate, 2);
-        presenter.getData(getActivity(), getString(R.string.graph_by_day), fullDate);
+        presenter.getDataByBlock(fullDate, this);
         dateTextView.setText(fullDate);
     }
 
