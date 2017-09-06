@@ -2,9 +2,9 @@ package com.example.macbook.smartparking.graphFragment;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +18,7 @@ import com.example.macbook.smartparking.graph.DataWorker;
 import com.example.macbook.smartparking.mainFragment.MainViewFragment;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -33,16 +34,40 @@ import lecho.lib.hellocharts.view.LineChartView;
 
 public class GraphFragmentGeneric  extends Fragment implements DatePickerDialog.OnDateSetListener, MainViewFragment {
 
-    LineChartView mChart;
-    FloatingActionButton pickDateButton;
-    //GraphPresenter worker;
-    DataWorker worker;
-    RelativeLayout progress;
-    TextView dateTextView;
+    private LineChartView mChart;
+    private FloatingActionButton mPickDateButton;
+    private DataWorker mWorker;
+    private RelativeLayout mProgress;
+    private int mTypeFragment;
+    private String mLeftString = "";
+    private String mBottomString = "";
+    private TextView mDateTextView;
+    public static final int GRAPH_BY_DAY = 1;
+    public static final int GRAPH_BY_BLOCK = 2;
+    public static final int GRAPH_BY_MONTH = 3;
+    public static final String LEFT_STRING_KEY = "left";
+    public static final String BOTTOM_STRING_KEY = "bottom";
+    public static final String TYPE_KEY = "bottom";
 
 
-    public GraphFragmentGeneric() {
+    public static GraphFragmentGeneric newInstance(String leftString, String rightString, int typeFragment) {
+        GraphFragmentGeneric myFragment = new GraphFragmentGeneric();
+        Bundle args = new Bundle();
+        args.putString(LEFT_STRING_KEY, leftString);
+        args.putString(BOTTOM_STRING_KEY, rightString);
+        args.putInt(TYPE_KEY, typeFragment);
+        myFragment.setArguments(args);
+        return myFragment;
+    }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if(savedInstanceState!=null){
+            mLeftString = getArguments().getString(LEFT_STRING_KEY);
+            mBottomString = getArguments().getString(BOTTOM_STRING_KEY);
+            mTypeFragment = getArguments().getInt(TYPE_KEY);
+        }
     }
 
 
@@ -51,12 +76,12 @@ public class GraphFragmentGeneric  extends Fragment implements DatePickerDialog.
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_graph, container, false);
-        pickDateButton = (FloatingActionButton)view.findViewById(R.id.pickDateButton);
+        mPickDateButton = (FloatingActionButton)view.findViewById(R.id.pickDateButton);
         mChart = (LineChartView) view.findViewById(R.id.chart);
-        progress = (RelativeLayout)view.findViewById(R.id.progresView);
-        dateTextView = (TextView)view.findViewById(R.id.date);
-        worker = new DataWorker();
-        pickDateButton.setOnClickListener(new View.OnClickListener() {
+        mProgress = (RelativeLayout)view.findViewById(R.id.progresView);
+        mDateTextView = (TextView)view.findViewById(R.id.date);
+        mWorker = new DataWorker();
+        mPickDateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Calendar now = Calendar.getInstance();
@@ -72,13 +97,13 @@ public class GraphFragmentGeneric  extends Fragment implements DatePickerDialog.
             }
         });
 
-        /**
-         * aqui se definen los labels
-         */
         TextView labelLeft = (TextView)view.findViewById(R.id.labelLeft);
         TextView labelBottom = (TextView)view.findViewById(R.id.labelBottom);
-        labelLeft.setText("Carros");
-        labelBottom.setText("Horas (0 a 24 hrs)");
+//        I must take these values
+//        labelLeft.setText("Carros");
+//        labelBottom.setText("Horas (0 a 24 hrs)");
+        labelLeft.setText(mLeftString);
+        labelBottom.setText(mBottomString);
 
         showLoading();
         return view;
@@ -99,13 +124,28 @@ public class GraphFragmentGeneric  extends Fragment implements DatePickerDialog.
             day = dayOfMonth+"";
         }
         ((HomeScreenAdministrator)getActivity()).setDateFragment(year+"-"+month+"-"+day, 0);
-        worker.getData(year+"-"+month+"-"+day, this);
-        dateTextView.setText(year+"-"+month+"-"+day);
+        mWorker.getData(year+"-"+month+"-"+day, this);
+        mDateTextView.setText(year+"-"+month+"-"+day);
     }
 
-    public void setLabelForType(String type){
-        switch (type){
+    public void setTypeFragment(int type){
+        this.mTypeFragment = type;
+    }
 
+    public void setLabels(String labelLeft, String labelBottom){
+        this.mLeftString = labelLeft;
+        this.mBottomString = labelBottom;
+    }
+
+    public void getDataByType(String date, int typeOfFragment){
+        switch (typeOfFragment){
+            case GRAPH_BY_DAY:
+                mWorker.getData(date, this);
+                break;
+            case GRAPH_BY_MONTH:
+                break;
+            case GRAPH_BY_BLOCK:
+                break;
         }
     }
 
@@ -119,7 +159,6 @@ public class GraphFragmentGeneric  extends Fragment implements DatePickerDialog.
             }
             values.add(new PointValue(i, val));
         }
-
         if(!thereValues){
             getView().findViewById(R.id.noData).setVisibility(View.VISIBLE);
         }else{
@@ -135,8 +174,6 @@ public class GraphFragmentGeneric  extends Fragment implements DatePickerDialog.
 
         LineChartData data = new LineChartData();
         data.setLines(lines);
-
-
         mChart.setLineChartData(data);
     }
 
@@ -144,24 +181,32 @@ public class GraphFragmentGeneric  extends Fragment implements DatePickerDialog.
     public void onResume() {
         String date = ((HomeScreenAdministrator)getActivity()).getDateFragment(0);
         if(!date.equals("")) {
-            worker.getData(date, this);
-            dateTextView.setText(date);
+            mWorker.getData(date, this);
+            getDataByType(date, mTypeFragment);
+            mDateTextView.setText(date);
         }else {
-            ((HomeScreenAdministrator)getActivity()).setDateFragment(GraphByBlockFragment.getDateToday(), 0);
-            worker.getData(GraphByBlockFragment.getDateToday(), this);
-            dateTextView.setText( GraphByBlockFragment.getDateToday());
+            ((HomeScreenAdministrator)getActivity()).setDateFragment(getDateToday(), 0);
+            getDataByType(getDateToday(), mTypeFragment);
+            mDateTextView.setText( GraphByBlockFragment.getDateToday());
         }
         super.onResume();
     }
 
+    private String getDateToday(){
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DATE, 1);
+        SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
+        return format1.format(cal.getTime());
+    }
+
     @Override
     public void hideLoading() {
-        progress.setVisibility(View.GONE);
+        mProgress.setVisibility(View.GONE);
     }
 
     @Override
     public void showLoading() {
-        progress.setVisibility(View.VISIBLE);
+        mProgress.setVisibility(View.VISIBLE);
     }
 
     @Override
