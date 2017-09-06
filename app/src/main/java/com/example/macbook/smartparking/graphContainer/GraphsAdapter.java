@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 import com.example.macbook.smartparking.graphFragment.GraphByMonthFragment;
 import com.example.macbook.smartparking.graphFragment.GraphFragment;
+import com.example.macbook.smartparking.graphFragment.GraphFragmentGeneric;
 
 import java.util.List;
 
@@ -20,9 +21,9 @@ class GraphsAdapter extends FragmentPagerAdapter {
 
     Context mContext;
     private String[] titles;
-    public List<String> fragmentsA;
+    public List<GraphFragmentGeneric> fragmentsA;
 
-    public GraphsAdapter(FragmentManager fm, List<String> fragments, Context context, String [] titles) {
+    public GraphsAdapter(FragmentManager fm, List<GraphFragmentGeneric> fragments, Context context, String [] titles) {
         super(fm);
         fragmentsA = fragments;
         mContext = context;
@@ -31,8 +32,7 @@ class GraphsAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        return Fragment.instantiate(mContext, fragmentsA.get(position));
-
+        return fragmentsA.get(position);
     }
 
 

@@ -81,27 +81,8 @@ public class GraphFragmentGeneric  extends Fragment implements DatePickerDialog.
         mProgress = (RelativeLayout)view.findViewById(R.id.progresView);
         mDateTextView = (TextView)view.findViewById(R.id.date);
         mWorker = new DataWorker();
-        mPickDateButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Calendar now = Calendar.getInstance();
-                DatePickerDialog dpd = DatePickerDialog.newInstance(
-                        GraphFragmentGeneric.this,
-                        now.get(Calendar.YEAR),
-                        now.get(Calendar.MONTH),
-                        now.get(Calendar.DAY_OF_MONTH)
-                );
-                dpd.setOnDateSetListener(GraphFragmentGeneric.this);
-                dpd.show(getActivity().getFragmentManager(), "Datepickerdialog");
-
-            }
-        });
-
         TextView labelLeft = (TextView)view.findViewById(R.id.labelLeft);
         TextView labelBottom = (TextView)view.findViewById(R.id.labelBottom);
-//        I must take these values
-//        labelLeft.setText("Carros");
-//        labelBottom.setText("Horas (0 a 24 hrs)");
         labelLeft.setText(mLeftString);
         labelBottom.setText(mBottomString);
 
@@ -123,7 +104,7 @@ public class GraphFragmentGeneric  extends Fragment implements DatePickerDialog.
         }else {
             day = dayOfMonth+"";
         }
-        ((HomeScreenAdministrator)getActivity()).setDateFragment(year+"-"+month+"-"+day, 0);
+        ((HomeScreenAdministrator)getActivity()).setDateFragment(year+"-"+month+"-"+day, mTypeFragment);
         mWorker.getData(year+"-"+month+"-"+day, this);
         mDateTextView.setText(year+"-"+month+"-"+day);
     }
@@ -135,6 +116,22 @@ public class GraphFragmentGeneric  extends Fragment implements DatePickerDialog.
     public void setLabels(String labelLeft, String labelBottom){
         this.mLeftString = labelLeft;
         this.mBottomString = labelBottom;
+    }
+
+    private void setDateOfModal(final Calendar calendar){
+        mPickDateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DatePickerDialog dpd = DatePickerDialog.newInstance(
+                        GraphFragmentGeneric.this,
+                        calendar.get(Calendar.YEAR),
+                        calendar.get(Calendar.MONTH),
+                        calendar.get(Calendar.DAY_OF_MONTH)
+                );
+                dpd.setOnDateSetListener(GraphFragmentGeneric.this);
+                dpd.show(getActivity().getFragmentManager(), "Datepickerdialog");
+            }
+        });
     }
 
     public void getDataByType(String date, int typeOfFragment){
@@ -179,15 +176,18 @@ public class GraphFragmentGeneric  extends Fragment implements DatePickerDialog.
 
     @Override
     public void onResume() {
-        String date = ((HomeScreenAdministrator)getActivity()).getDateFragment(0);
-        if(!date.equals("")) {
+        String date = ((HomeScreenAdministrator)getActivity()).getDateFragment(mTypeFragment);
+        Calendar calendar = ((HomeScreenAdministrator)getActivity()).getCalendarFragment(mTypeFragment);
+        if(!date.equals("") && calendar!=null) {
             mWorker.getData(date, this);
             getDataByType(date, mTypeFragment);
             mDateTextView.setText(date);
+            setDateOfModal(calendar);
         }else {
-            ((HomeScreenAdministrator)getActivity()).setDateFragment(getDateToday(), 0);
+            ((HomeScreenAdministrator)getActivity()).setDateFragment(getDateToday(), mTypeFragment);
             getDataByType(getDateToday(), mTypeFragment);
             mDateTextView.setText( GraphByBlockFragment.getDateToday());
+            setDateOfModal(Calendar.getInstance());
         }
         super.onResume();
     }

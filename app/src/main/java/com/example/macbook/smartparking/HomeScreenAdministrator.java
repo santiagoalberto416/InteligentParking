@@ -1,6 +1,5 @@
 package com.example.macbook.smartparking;
 
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -17,8 +16,12 @@ import android.widget.RelativeLayout;
 
 import com.example.macbook.smartparking.graphContainer.GraphContainerFragment;
 import com.example.macbook.smartparking.mainFragment.MainFragment;
-import com.example.macbook.smartparking.mainFragment.OnClickedItem;
-import com.example.macbook.smartparking.maps.MapActivityMain;
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 public class HomeScreenAdministrator extends AppCompatActivity implements OnGraphButtonListener {
 
@@ -29,6 +32,7 @@ public class HomeScreenAdministrator extends AppCompatActivity implements OnGrap
 
 
     String [] fragmentsDate = {"", "", ""};
+    Calendar [] mDateSelected = {null, null, null};;
 
 
 
@@ -61,10 +65,23 @@ public class HomeScreenAdministrator extends AppCompatActivity implements OnGrap
 
     public void setDateFragment(String dateFragment, int position){
         fragmentsDate[position] = dateFragment;
+        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            Date date = formatter.parse(dateFragment);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            mDateSelected[position] = calendar;
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 
     public String getDateFragment(int position){
         return fragmentsDate[position];
+    }
+
+    public Calendar getCalendarFragment(int position){
+        return mDateSelected[position];
     }
 
     @Override
