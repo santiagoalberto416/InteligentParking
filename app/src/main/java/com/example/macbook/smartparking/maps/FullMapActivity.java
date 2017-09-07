@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -114,17 +115,16 @@ public class FullMapActivity extends AppCompatActivity implements OnMapReadyCall
                     data = new JSONObject(response);
                     if(data!=null && mapa!=null){
                         layer = new GeoJsonLayer(mapa, data);
-                        mapa.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(32.460266, -116.825946), 18));
+                        mapa.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(32.459445,-116.825916), 19));
                         for (GeoJsonFeature feature : layer.getFeatures()) {
                             if (feature.hasProperty("state")) {
                                 Log.d("id",feature.getProperty("id"));
-                                int state = Integer.parseInt(feature.getProperty("state"));
-
+                                String state = feature.getProperty("state").toString();
                                 GeoJsonPolygonStyle style = new GeoJsonPolygonStyle();
-                                if(state == 1){
-                                    style.setFillColor(Color.parseColor("#A6BBC6CE"));
+                                if(state.equals("free")){
+                                    style.setFillColor(ContextCompat.getColor(FullMapActivity.this, android.R.color.holo_green_dark));
                                 }else{
-                                    style.setFillColor(Color.parseColor("#A6E33232"));
+                                    style.setFillColor(ContextCompat.getColor(FullMapActivity.this, android.R.color.holo_red_dark));
                                 }
                                 feature.setPolygonStyle(style);
                                 layer.addFeature(feature);
@@ -181,9 +181,9 @@ public class FullMapActivity extends AppCompatActivity implements OnMapReadyCall
                     if(id==idFeature){
                         GeoJsonPolygonStyle style = new GeoJsonPolygonStyle();
                         if(state.equals("free")){
-                            style.setFillColor(Color.parseColor("#A6BBC6CE"));
+                            style.setFillColor(ContextCompat.getColor(FullMapActivity.this, android.R.color.holo_green_dark));
                         }else if(state.equals("ocupated")){
-                            style.setFillColor(Color.parseColor("#A6E33232"));
+                            style.setFillColor(ContextCompat.getColor(FullMapActivity.this,android.R.color.holo_red_dark));
                         }else if(state.equals("parking")){
                             style.setFillColor(Color.YELLOW);
                         }

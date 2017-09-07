@@ -1,9 +1,8 @@
-package com.example.macbook.smartparking.mainFragment;
+package com.example.macbook.smartparking.mainfragment;
 
 import android.content.Context;
 import android.util.Log;
 
-import com.example.macbook.smartparking.R;
 import com.example.macbook.smartparking.data.sensorInfo.MainAdminResponse;
 import com.example.macbook.smartparking.data.sensorInfo.Sensor;
 import com.example.macbook.smartparking.data.sensorInfo.SensorResponseInterface;
@@ -11,12 +10,7 @@ import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import retrofit2.Call;
