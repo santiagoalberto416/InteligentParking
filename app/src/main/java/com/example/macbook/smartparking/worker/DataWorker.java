@@ -1,6 +1,5 @@
-package com.example.macbook.smartparking.graph;
+package com.example.macbook.smartparking.worker;
 
-import android.content.Context;
 import android.util.Log;
 
 import com.example.macbook.smartparking.data.graphs.first.DataToGraph;
@@ -11,7 +10,7 @@ import com.example.macbook.smartparking.data.graphs.first.Hour;
 import com.example.macbook.smartparking.data.graphs.third.Block;
 import com.example.macbook.smartparking.data.graphs.third.BlockResponse;
 import com.example.macbook.smartparking.data.graphs.third.ThirdGraphInterface;
-import com.example.macbook.smartparking.mainFragment.MainViewFragment;
+import com.example.macbook.smartparking.mainfragment.MainViewFragment;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -101,7 +100,7 @@ public class DataWorker {
 
         // TO DO change this to get the param, it must change the fragment too
 
-        DataToGraph graph = new DataToGraph("2017-07-05");
+        DataToGraph graph = new DataToGraph(dateDesigned);
         Call<GraphByDayResponse> call = restClient.postJson(graph);
         call.enqueue(new Callback<GraphByDayResponse>() {
             @Override
@@ -115,6 +114,7 @@ public class DataWorker {
                             sets.add(amount);
                         }
                         mainView.showDataFromServerCharset(sets);
+                        mainView.hideLoading();
                         break;
                     case 401:
                         mainView.hideLoading();
@@ -156,6 +156,7 @@ public class DataWorker {
                             sets.add(amount);
                         }
                         mainView.showDataFromServerCharset(sets);
+                        mainView.hideLoading();
                         break;
                     case 401:
                         mainView.hideLoading();

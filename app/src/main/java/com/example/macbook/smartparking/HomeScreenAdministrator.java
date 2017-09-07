@@ -14,8 +14,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.RelativeLayout;
 
-import com.example.macbook.smartparking.graphContainer.GraphContainerFragment;
-import com.example.macbook.smartparking.mainFragment.MainFragment;
+import com.example.macbook.smartparking.container.GraphContainerFragment;
+import com.example.macbook.smartparking.mainfragment.MainFragment;
 
 import java.text.DateFormat;
 import java.text.ParseException;

@@ -1,4 +1,4 @@
-package com.example.macbook.smartparking.graphFragment;
+package com.example.macbook.smartparking.graphs;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -14,8 +14,8 @@ import android.widget.TextView;
 import com.example.macbook.smartparking.HomeScreenAdministrator;
 import com.example.macbook.smartparking.R;
 import com.example.macbook.smartparking.data.sensorInfo.Sensor;
-import com.example.macbook.smartparking.graph.DataWorker;
-import com.example.macbook.smartparking.mainFragment.MainViewFragment;
+import com.example.macbook.smartparking.worker.DataWorker;
+import com.example.macbook.smartparking.mainfragment.MainViewFragment;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 import java.text.SimpleDateFormat;
@@ -42,9 +42,9 @@ public class GraphFragmentGeneric  extends Fragment implements DatePickerDialog.
     private String mLeftString = "";
     private String mBottomString = "";
     private TextView mDateTextView;
-    public static final int GRAPH_BY_DAY = 1;
+    public static final int GRAPH_BY_DAY = 0;
+    public static final int GRAPH_BY_MONTH = 1;
     public static final int GRAPH_BY_BLOCK = 2;
-    public static final int GRAPH_BY_MONTH = 3;
     public static final String LEFT_STRING_KEY = "left";
     public static final String BOTTOM_STRING_KEY = "bottom";
     public static final String TYPE_KEY = "bottom";
@@ -104,9 +104,11 @@ public class GraphFragmentGeneric  extends Fragment implements DatePickerDialog.
         }else {
             day = dayOfMonth+"";
         }
-        ((HomeScreenAdministrator)getActivity()).setDateFragment(year+"-"+month+"-"+day, mTypeFragment);
-        mWorker.getData(year+"-"+month+"-"+day, this);
-        mDateTextView.setText(year+"-"+month+"-"+day);
+        String date = year+"-"+month+"-"+day;
+        ((HomeScreenAdministrator)getActivity()).setDateFragment(date, mTypeFragment);
+        getDataByType(date,mTypeFragment);
+        mDateTextView.setText(date);
+        setDateOfModal(((HomeScreenAdministrator)getActivity()).getCalendarFragment(mTypeFragment));
     }
 
     public void setTypeFragment(int type){
@@ -140,13 +142,18 @@ public class GraphFragmentGeneric  extends Fragment implements DatePickerDialog.
                 mWorker.getData(date, this);
                 break;
             case GRAPH_BY_MONTH:
+                mWorker.getDataByMonth(date, this);
                 break;
             case GRAPH_BY_BLOCK:
+                mWorker.getDataByBlock(date, this);
                 break;
         }
     }
 
     private void setData(List<Float> datas) {
+        if(getView()==null){
+            return;
+        }
         List<PointValue> values = new ArrayList<PointValue>();
         Boolean thereValues = false;
         for (int i = 0; i < datas.size(); i++) {
@@ -176,6 +183,7 @@ public class GraphFragmentGeneric  extends Fragment implements DatePickerDialog.
 
     @Override
     public void onResume() {
+        super.onResume();
         String date = ((HomeScreenAdministrator)getActivity()).getDateFragment(mTypeFragment);
         Calendar calendar = ((HomeScreenAdministrator)getActivity()).getCalendarFragment(mTypeFragment);
         if(!date.equals("") && calendar!=null) {
@@ -186,10 +194,9 @@ public class GraphFragmentGeneric  extends Fragment implements DatePickerDialog.
         }else {
             ((HomeScreenAdministrator)getActivity()).setDateFragment(getDateToday(), mTypeFragment);
             getDataByType(getDateToday(), mTypeFragment);
-            mDateTextView.setText( GraphByBlockFragment.getDateToday());
+            mDateTextView.setText(getDateToday());
             setDateOfModal(Calendar.getInstance());
         }
-        super.onResume();
     }
 
     private String getDateToday(){

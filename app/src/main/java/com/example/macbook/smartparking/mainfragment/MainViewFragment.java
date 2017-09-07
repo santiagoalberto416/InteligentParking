@@ -1,6 +1,5 @@
-package com.example.macbook.smartparking.mainFragment;
+package com.example.macbook.smartparking.mainfragment;
 
-import com.example.macbook.smartparking.data.sensorInfo.MainAdminResponse;
 import com.example.macbook.smartparking.data.sensorInfo.Sensor;
 
 import java.util.List;

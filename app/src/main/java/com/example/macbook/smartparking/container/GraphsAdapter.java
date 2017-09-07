@@ -1,18 +1,13 @@
-package com.example.macbook.smartparking.graphContainer;
+package com.example.macbook.smartparking.container;
 
 import android.content.Context;
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.example.macbook.smartparking.graphFragment.GraphByMonthFragment;
-import com.example.macbook.smartparking.graphFragment.GraphFragment;
-import com.example.macbook.smartparking.graphFragment.GraphFragmentGeneric;
+import com.example.macbook.smartparking.graphs.GraphFragmentGeneric;
 
 import java.util.List;
-
-import static android.drm.DrmStore.DrmObjectType.CONTENT;
 
 /**
  * Created by macbook on 26/06/17.

@@ -1,4 +1,4 @@
-package com.example.macbook.smartparking.mainFragment;
+package com.example.macbook.smartparking.mainfragment;
 
 import android.app.Activity;
 import android.content.Context;
@@ -9,17 +9,14 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
-import com.example.macbook.smartparking.HomeScreenAdministrator;
 import com.example.macbook.smartparking.OnGraphButtonListener;
 import com.example.macbook.smartparking.R;
-import com.example.macbook.smartparking.data.sensorInfo.MainAdminResponse;
 import com.example.macbook.smartparking.data.sensorInfo.Sensor;
 import com.example.macbook.smartparking.maps.MapActivityMain;
 

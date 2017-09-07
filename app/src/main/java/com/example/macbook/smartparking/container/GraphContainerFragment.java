@@ -1,4 +1,4 @@
-package com.example.macbook.smartparking.graphContainer;
+package com.example.macbook.smartparking.container;
 
 
 import android.os.Bundle;
@@ -10,10 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.macbook.smartparking.R;
-import com.example.macbook.smartparking.graphFragment.GraphByBlockFragment;
-import com.example.macbook.smartparking.graphFragment.GraphByMonthFragment;
-import com.example.macbook.smartparking.graphFragment.GraphFragment;
-import com.example.macbook.smartparking.graphFragment.GraphFragmentGeneric;
+import com.example.macbook.smartparking.graphs.GraphFragmentGeneric;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,16 +37,25 @@ public class GraphContainerFragment extends Fragment {
         GraphFragmentGeneric blocksByDay = GraphFragmentGeneric.newInstance("Carros", "Horas (0 a 24 hrs)", GraphFragmentGeneric.GRAPH_BY_DAY);
         blocksByDay.setTypeFragment(GraphFragmentGeneric.GRAPH_BY_DAY);
         blocksByDay.setLabels("Carros", "Horas (0 a 24 hrs)");
+        GraphFragmentGeneric blocksByMonth = GraphFragmentGeneric.newInstance("Carros", "Horas (0 a 24 hrs)", GraphFragmentGeneric.GRAPH_BY_MONTH);
+        blocksByMonth.setTypeFragment(GraphFragmentGeneric.GRAPH_BY_MONTH);
+        blocksByMonth.setLabels("Carros", "Horas (0 a 24 hrs)");
+        GraphFragmentGeneric blocksByBlock = GraphFragmentGeneric.newInstance("Carros", "Horas (0 a 24 hrs)", GraphFragmentGeneric.GRAPH_BY_BLOCK);
+        blocksByBlock.setTypeFragment(GraphFragmentGeneric.GRAPH_BY_BLOCK);
+        blocksByBlock.setLabels("Carros por mes", "Bloques");
         fragments.add(blocksByDay);
+        fragments.add(blocksByMonth);
+        fragments.add(blocksByBlock);
         String[] titles = {"Actividad por dia", "Actividad por mes", "Actividad por bloques"};
         mCustomPagerAdapter = new GraphsAdapter(getChildFragmentManager(), fragments, getActivity(), titles);
-
         mViewPager = (ViewPager) view.findViewById(R.id.pager);
         mViewPager.setAdapter(mCustomPagerAdapter);
 
         return view;
     }
 
+//    labelLeft.setText("Carros por mes");
+//        labelBottom.setText("Bloques");
 
 
 }

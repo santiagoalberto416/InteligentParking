@@ -1,19 +1,13 @@
-package com.example.macbook.smartparking.mainFragment;
+package com.example.macbook.smartparking.mainfragment;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.macbook.smartparking.HomeScreenAdministrator;
-import com.example.macbook.smartparking.LoginActivity;
 import com.example.macbook.smartparking.R;
 import com.example.macbook.smartparking.data.sensorInfo.Sensor;
-import com.example.macbook.smartparking.maps.MapActivityMain;
 
 import java.util.List;
 
