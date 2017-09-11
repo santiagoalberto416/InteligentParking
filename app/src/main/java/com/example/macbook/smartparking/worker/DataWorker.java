@@ -10,7 +10,10 @@ import com.example.macbook.smartparking.data.graphs.first.Hour;
 import com.example.macbook.smartparking.data.graphs.third.Block;
 import com.example.macbook.smartparking.data.graphs.third.BlockResponse;
 import com.example.macbook.smartparking.data.graphs.third.ThirdGraphInterface;
-import com.example.macbook.smartparking.mainfragment.MainViewFragment;
+import com.example.macbook.smartparking.data.sensorInfo.MainAdminResponse;
+import com.example.macbook.smartparking.data.sensorInfo.Sensor;
+import com.example.macbook.smartparking.data.sensorInfo.SensorResponseInterface;
+import com.example.macbook.smartparking.main.MainViewFragment;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -33,17 +36,17 @@ public class DataWorker {
 
     public static final String BASE_URL = "http://sparkingsystem.info/api/";
     public static final String PARAM_DATE = "date";
-    public Gson gsonObject;
-    public Retrofit retrofitObject;
+    public Gson gsonBuilder;
+    public Retrofit retrofitBuilder;
 
     public void constructData(String baseUrl){
-        gsonObject = new GsonBuilder()
+        gsonBuilder = new GsonBuilder()
                 .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
                 .create();
 
-        retrofitObject = new Retrofit.Builder()
+        retrofitBuilder = new Retrofit.Builder()
                 .baseUrl(baseUrl)
-                .addConverterFactory(GsonConverterFactory.create(gsonObject))
+                .addConverterFactory(GsonConverterFactory.create(gsonBuilder))
                 .build();
     }
 
@@ -54,7 +57,7 @@ public class DataWorker {
      */
     public void getData(String dateString, final MainViewFragment mainView){
         constructData(BASE_URL);
-        GraphByDayInterface restClient = retrofitObject.create(GraphByDayInterface.class);
+        GraphByDayInterface restClient = retrofitBuilder.create(GraphByDayInterface.class);
         mainView.showLoading();
         DataToGraph graph = new DataToGraph(dateString);
         Call<GraphByDayResponse> call = restClient.postJson(graph);
@@ -95,7 +98,7 @@ public class DataWorker {
 
     public void getDataByMonth(String dateDesigned, final MainViewFragment mainView){
         constructData(BASE_URL);
-        GraphByMonthInterface restClient = retrofitObject.create(GraphByMonthInterface.class);
+        GraphByMonthInterface restClient = retrofitBuilder.create(GraphByMonthInterface.class);
         mainView.showLoading();
 
         // TO DO change this to get the param, it must change the fragment too
@@ -139,7 +142,7 @@ public class DataWorker {
      */
     public void getDataByBlock(String dateString, final MainViewFragment mainView){
         constructData(BASE_URL);
-        ThirdGraphInterface restClient = retrofitObject.create(ThirdGraphInterface.class);
+        ThirdGraphInterface restClient = retrofitBuilder.create(ThirdGraphInterface.class);
         mainView.showLoading();
         HashMap<String, String> parameters = new HashMap<>();
         parameters.put(PARAM_DATE, dateString);
@@ -169,6 +172,51 @@ public class DataWorker {
 
             @Override
             public void onFailure(Call<BlockResponse> call, Throwable t) {
+                mainView.hideLoading();
+            }
+        });
+    }
+
+
+    /**
+     * This method helps to get the data of the cars with a delay time
+     * @param mainView this interface allows the comunication with the fragment
+     */
+    public void getDataDelays(final MainViewFragment mainView){
+        constructData(BASE_URL);
+
+        SensorResponseInterface restClient = retrofitBuilder.create(SensorResponseInterface.class);
+        mainView.showLoading();
+        Call<MainAdminResponse> call = restClient.getData();
+        call.enqueue(new Callback<MainAdminResponse>() {
+            @Override
+            public void onResponse(Call<MainAdminResponse> call, Response<MainAdminResponse> response) {
+                switch (response.code()) {
+                    case 200:
+                        MainAdminResponse data = response.body();
+                        List<Sensor> sensors = new ArrayList<>();
+                        for(Sensor sensor : data.getSensors()){
+                            String myDateString = sensor.getTime();
+                            String [] arrayHours = myDateString.split("\\:");
+                            int hour = Integer.parseInt(arrayHours[0]);
+                            if(hour > 24){
+                                sensors.add(sensor);
+                            }
+                        }
+                        mainView.hideLoading();
+                        mainView.showDataFromServer(sensors);
+                        break;
+                    case 401:
+                        mainView.hideLoading();
+                        break;
+                    default:
+                        mainView.hideLoading();
+                        break;
+                }
+            }
+
+            @Override
+            public void onFailure(Call<MainAdminResponse> call, Throwable t) {
                 mainView.hideLoading();
             }
         });

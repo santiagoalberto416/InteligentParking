@@ -15,26 +15,26 @@ import java.util.List;
 class GraphsAdapter extends FragmentPagerAdapter {
 
     Context mContext;
-    private String[] titles;
-    public List<GraphFragmentGeneric> fragmentsA;
+    private String[] mTitles;
+    private List<GraphFragmentGeneric> mFragmentsA;
 
     public GraphsAdapter(FragmentManager fm, List<GraphFragmentGeneric> fragments, Context context, String [] titles) {
         super(fm);
-        fragmentsA = fragments;
+        mFragmentsA = fragments;
         mContext = context;
-        this.titles = titles;
+        this.mTitles = titles;
     }
 
     @Override
     public Fragment getItem(int position) {
-        return fragmentsA.get(position);
+        return mFragmentsA.get(position);
     }
 
 
     @Override
     public int getCount() {
         // return CONTENT.length;
-        return fragmentsA.size();
+        return mFragmentsA.size();
     }
 
     @Override
@@ -44,6 +44,6 @@ class GraphsAdapter extends FragmentPagerAdapter {
 
     @Override
     public CharSequence getPageTitle(int position) {
-        return titles[position];
+        return mTitles[position];
     }
 }

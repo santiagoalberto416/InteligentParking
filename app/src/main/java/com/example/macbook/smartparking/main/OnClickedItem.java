@@ -1,4 +1,4 @@
-package com.example.macbook.smartparking.mainfragment;
+package com.example.macbook.smartparking.main;
 
 /**
  * Created by skirk on 6/27/17.

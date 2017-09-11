@@ -1,4 +1,4 @@
-package com.example.macbook.smartparking.mainfragment;
+package com.example.macbook.smartparking.main;
 
 import android.content.Context;
 import android.util.Log;
@@ -31,7 +31,7 @@ public class MainFragmentPresenter {
         this.mainview = mainview;
     }
 
-    public void getData(Context context){
+    public void getData(Context context) {
         Gson gson = new GsonBuilder()
                 .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
                 .create();
@@ -73,15 +73,15 @@ public class MainFragmentPresenter {
         });
     }
 
-    public List<Sensor> getLateSensor(MainAdminResponse response){
+    public List<Sensor> getLateSensor(MainAdminResponse response) {
         List<Sensor> sensors = new ArrayList<>();
-        for(Sensor sensor : response.getSensors()){
+        for (Sensor sensor : response.getSensors()) {
             String myDateString = sensor.getTime();
-                String [] arrayHours = myDateString.split("\\:");
-                int hour = Integer.parseInt(arrayHours[0]);
-                if(hour > 24){
-                    sensors.add(sensor);
-                }
+            String[] arrayHours = myDateString.split("\\:");
+            int hour = Integer.parseInt(arrayHours[0]);
+            if (hour > 24) {
+                sensors.add(sensor);
+            }
         }
         return sensors;
     }

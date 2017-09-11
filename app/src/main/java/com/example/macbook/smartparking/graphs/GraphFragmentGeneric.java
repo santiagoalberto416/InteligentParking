@@ -15,7 +15,7 @@ import com.example.macbook.smartparking.HomeScreenAdministrator;
 import com.example.macbook.smartparking.R;
 import com.example.macbook.smartparking.data.sensorInfo.Sensor;
 import com.example.macbook.smartparking.worker.DataWorker;
-import com.example.macbook.smartparking.mainfragment.MainViewFragment;
+import com.example.macbook.smartparking.main.MainViewFragment;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 import java.text.SimpleDateFormat;

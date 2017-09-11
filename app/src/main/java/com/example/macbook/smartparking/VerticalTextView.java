@@ -6,6 +6,7 @@ import android.graphics.Rect;
 import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.support.v7.widget.AppCompatTextView;
+
 /**
  * Created by skirk on 8/10/17.
  */

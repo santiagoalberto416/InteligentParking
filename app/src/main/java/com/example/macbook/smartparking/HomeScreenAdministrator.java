@@ -15,7 +15,7 @@ import android.view.MenuItem;
 import android.widget.RelativeLayout;
 
 import com.example.macbook.smartparking.container.GraphContainerFragment;
-import com.example.macbook.smartparking.mainfragment.MainFragment;
+import com.example.macbook.smartparking.main.MainFragment;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -45,7 +45,7 @@ public class HomeScreenAdministrator extends AppCompatActivity implements OnGrap
             fm = getSupportFragmentManager();
             FragmentTransaction ft = fm.beginTransaction();
             fragment = new MainFragment();
-            fragment.setListener(this);
+            fragment.setmListener(this);
             ft.add(R.id.fragmentContainer, fragment, null);
             ft.commit();
         }else{

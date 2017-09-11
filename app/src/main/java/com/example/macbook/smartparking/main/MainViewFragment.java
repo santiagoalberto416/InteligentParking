@@ -1,4 +1,4 @@
-package com.example.macbook.smartparking.mainfragment;
+package com.example.macbook.smartparking.main;
 
 import com.example.macbook.smartparking.data.sensorInfo.Sensor;
 

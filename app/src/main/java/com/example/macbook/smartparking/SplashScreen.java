@@ -17,8 +17,8 @@ public class SplashScreen extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
-        continueButton = (Button)findViewById(R.id.continueButton);
-        continueButtonAdministrator = (Button)findViewById(R.id.continueButtonAdmin);
+        continueButton = (Button) findViewById(R.id.continueButton);
+        continueButtonAdministrator = (Button) findViewById(R.id.continueButtonAdmin);
         continueButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -28,14 +28,14 @@ public class SplashScreen extends AppCompatActivity {
         continueButtonAdministrator.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent loginIntent =  new Intent(SplashScreen.this, LoginActivity.class);
+                Intent loginIntent = new Intent(SplashScreen.this, LoginActivity.class);
                 startActivity(loginIntent);
             }
         });
         continueButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent loginIntent =  new Intent(SplashScreen.this, FullMapActivity.class);
+                Intent loginIntent = new Intent(SplashScreen.this, FullMapActivity.class);
                 startActivity(loginIntent);
             }
         });
