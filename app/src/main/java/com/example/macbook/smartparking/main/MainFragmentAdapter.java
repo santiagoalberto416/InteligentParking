@@ -1,4 +1,4 @@
-package com.example.macbook.smartparking.mainfragment;
+package com.example.macbook.smartparking.main;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -26,10 +26,11 @@ public class MainFragmentAdapter extends RecyclerView.Adapter<MainFragmentAdapte
         // each data item is just a string in this case
         public TextView idText;
         public TextView timeText;
+
         public ViewHolder(View v) {
             super(v);
-            idText = (TextView)v.findViewById(R.id.idText);
-            timeText = (TextView)v.findViewById(R.id.timeText);
+            idText = (TextView) v.findViewById(R.id.idText);
+            timeText = (TextView) v.findViewById(R.id.timeText);
         }
     }
 
@@ -42,7 +43,7 @@ public class MainFragmentAdapter extends RecyclerView.Adapter<MainFragmentAdapte
     // Create new views (invoked by the layout manager)
     @Override
     public MainFragmentAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
-                                                   int viewType) {
+                                                             int viewType) {
         // create a new view
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_delay_row, parent, false);
@@ -56,15 +57,15 @@ public class MainFragmentAdapter extends RecyclerView.Adapter<MainFragmentAdapte
     public void onBindViewHolder(ViewHolder holder, int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-          final Sensor item = mDataset.get(position);
-          holder.timeText.setText(item.getTime());
-          holder.idText.setText(item.getId()+"");
-          holder.itemView.setOnClickListener(new View.OnClickListener() {
-              @Override
-              public void onClick(View v) {
-                  listener.onClickPosition(item.getId());
-              }
-          });
+        final Sensor item = mDataset.get(position);
+        holder.timeText.setText(item.getTime());
+        holder.idText.setText(item.getId() + "");
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onClickPosition(item.getId());
+            }
+        });
 
     }
 

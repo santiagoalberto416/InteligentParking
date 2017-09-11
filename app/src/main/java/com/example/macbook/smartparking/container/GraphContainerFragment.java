@@ -24,15 +24,16 @@ public class GraphContainerFragment extends Fragment {
     GraphsAdapter mCustomPagerAdapter;
     ViewPager mViewPager;
     public static final String TAG_GRAPH_CONTAINER = "graphContainer";
+
     public GraphContainerFragment() {
         // Required empty public constructor
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                         Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_graph_container, container, false);;
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_graph_container, container, false);
+        ;
         List<GraphFragmentGeneric> fragments = new ArrayList<>();
         GraphFragmentGeneric blocksByDay = GraphFragmentGeneric.newInstance("Carros", "Horas (0 a 24 hrs)", GraphFragmentGeneric.GRAPH_BY_DAY);
         blocksByDay.setTypeFragment(GraphFragmentGeneric.GRAPH_BY_DAY);

@@ -37,7 +37,6 @@ import java.net.URISyntaxException;
 public class FullMapActivity extends AppCompatActivity implements OnMapReadyCallback {
 
 
-
     ProgressDialog progress;
 
     private GoogleMap mapa;
@@ -62,7 +61,8 @@ public class FullMapActivity extends AppCompatActivity implements OnMapReadyCall
         super.onCreate(savedInstanceState);
         try {
             mSocket = IO.socket(getApplicationContext().getString(R.string.socket_url));
-        } catch (URISyntaxException e) {}
+        } catch (URISyntaxException e) {
+        }
         setContentView(R.layout.fragment_blank);
         MapWorkerSingleton.getInstance().getContent("http://sparkingsystem.info/api/geojson", this);
         progress = ProgressDialog.show(this, "Getting Data ...", "Waiting For Results...", true);
@@ -71,7 +71,7 @@ public class FullMapActivity extends AppCompatActivity implements OnMapReadyCall
                 .findFragmentById(R.id.map);
 
         mapFragment.getMapAsync(this);
-        button = (FloatingActionButton)findViewById(R.id.instructionsButton);
+        button = (FloatingActionButton) findViewById(R.id.instructionsButton);
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,43 +87,40 @@ public class FullMapActivity extends AppCompatActivity implements OnMapReadyCall
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
         registerReceiver(receiver, new IntentFilter(MapWorkerSingleton.ACTION_FOR_INTENT_CALLBACK));
     }
 
 
     @Override
-    public void onPause()
-    {
+    public void onPause() {
         super.onPause();
         unregisterReceiver(receiver);
     }
+
     /**
      * Our Broadcast Receiver. We get notified that the data is ready this way.
      */
-    private BroadcastReceiver receiver = new BroadcastReceiver()
-    {
+    private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
-        public void onReceive(Context context, Intent intent)
-        {
-            if (progress != null)
-            {
+        public void onReceive(Context context, Intent intent) {
+            if (progress != null) {
                 progress.dismiss();
                 try {
                     String response = intent.getStringExtra(RestTask.HTTP_RESPONSE);
                     data = new JSONObject(response);
-                    if(data!=null && mapa!=null){
+                    if (data != null && mapa != null) {
                         layer = new GeoJsonLayer(mapa, data);
-                        mapa.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(32.459445,-116.825916), 19));
+                        mapa.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(32.459445, -116.825916), 19));
                         for (GeoJsonFeature feature : layer.getFeatures()) {
                             if (feature.hasProperty("state")) {
-                                Log.d("id",feature.getProperty("id"));
+                                Log.d("id", feature.getProperty("id"));
                                 String state = feature.getProperty("state").toString();
                                 GeoJsonPolygonStyle style = new GeoJsonPolygonStyle();
-                                if(state.equals("free")){
+                                if (state.equals("free")) {
                                     style.setFillColor(ContextCompat.getColor(FullMapActivity.this, android.R.color.holo_green_dark));
-                                }else{
+                                } else {
                                     style.setFillColor(ContextCompat.getColor(FullMapActivity.this, android.R.color.holo_red_dark));
                                 }
                                 feature.setPolygonStyle(style);
@@ -134,7 +131,7 @@ public class FullMapActivity extends AppCompatActivity implements OnMapReadyCall
                         mSocket.connect();
                         mSocket.on("sendChangeToDash", onNewMessage);
                     }
-                }catch(JSONException ex){
+                } catch (JSONException ex) {
 
                 }
 
@@ -150,21 +147,21 @@ public class FullMapActivity extends AppCompatActivity implements OnMapReadyCall
                 @Override
                 public void run() {
                     try {
-                    JSONObject data = new JSONObject((String) arg[0]);
-                    Log.d("data socket", data.toString());
-                    int id;
-                    String state;
-                    try {
-                        id = data.getInt("id");
-                        state = data.getString("state");
-                    } catch (JSONException e) {
-                        return;
-                    }
-                    changeStateToFeature(id, state);
-                    // add the message to view
+                        JSONObject data = new JSONObject((String) arg[0]);
+                        Log.d("data socket", data.toString());
+                        int id;
+                        String state;
+                        try {
+                            id = data.getInt("id");
+                            state = data.getString("state");
+                        } catch (JSONException e) {
+                            return;
+                        }
+                        changeStateToFeature(id, state);
+                        // add the message to view
 
 
-                    }catch (JSONException ex){
+                    } catch (JSONException ex) {
                         ex.printStackTrace();
                     }
                 }
@@ -172,19 +169,19 @@ public class FullMapActivity extends AppCompatActivity implements OnMapReadyCall
         }
     };
 
-    private void changeStateToFeature(int id, String state){
-        if(mapa!=null){
+    private void changeStateToFeature(int id, String state) {
+        if (mapa != null) {
             for (GeoJsonFeature feature : layer.getFeatures()) {
                 if (feature.hasProperty("id")) {
-                    Log.d("id",feature.getProperty("id"));
+                    Log.d("id", feature.getProperty("id"));
                     int idFeature = Integer.parseInt(feature.getProperty("id"));
-                    if(id==idFeature){
+                    if (id == idFeature) {
                         GeoJsonPolygonStyle style = new GeoJsonPolygonStyle();
-                        if(state.equals("free")){
+                        if (state.equals("free")) {
                             style.setFillColor(ContextCompat.getColor(FullMapActivity.this, android.R.color.holo_green_dark));
-                        }else if(state.equals("ocupated")){
-                            style.setFillColor(ContextCompat.getColor(FullMapActivity.this,android.R.color.holo_red_dark));
-                        }else if(state.equals("parking")){
+                        } else if (state.equals("ocupated")) {
+                            style.setFillColor(ContextCompat.getColor(FullMapActivity.this, android.R.color.holo_red_dark));
+                        } else if (state.equals("parking")) {
                             style.setFillColor(Color.YELLOW);
                         }
                         feature.setPolygonStyle(style);

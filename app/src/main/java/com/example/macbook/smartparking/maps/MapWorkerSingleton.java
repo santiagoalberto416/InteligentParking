@@ -18,30 +18,26 @@ public class MapWorkerSingleton {
     public static final String ACTION_FOR_INTENT_CALLBACK = "THIS_IS_A_UNIQUE_KEY_WE_USE_TO_COMMUNICATE";
 
 
-
     private static MapWorkerSingleton instance = null;
+
     protected MapWorkerSingleton() {
         // Exists only to defeat instantiation.
     }
+
     public static MapWorkerSingleton getInstance() {
-        if(instance == null) {
+        if (instance == null) {
             instance = new MapWorkerSingleton();
         }
         return instance;
     }
 
-    public void getContent(String url, Activity activity)
-    {
-        // the request
-        try
-        {
+    public void getContent(String url, Activity activity) {
+        try {
             HttpGet httpGet = new HttpGet(new URI(url));
             RestTask task = new RestTask(activity, ACTION_FOR_INTENT_CALLBACK);
             task.execute(httpGet);
 
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             Log.e("Error", e.getMessage());
         }
 
