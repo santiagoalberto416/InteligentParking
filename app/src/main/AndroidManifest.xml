@@ -42,7 +42,9 @@
             android:label="@string/title_activity_login" />
         <activity android:name=".HomeScreenAdministrator" />
         <activity android:name=".maps.MapActivityMain" />
-        <activity android:name=".maps.FullMapActivity"></activity>
+        <activity android:name=".maps.FullMapActivity" />
+        <activity android:name=".service.NotifyUserActivity"></activity>
+        <service android:name=".service.ListenSocketService" android:icon="@drawable/ic_action_local_parking_black" android:label="@string/app_name" android:enabled="true"/>
     </application>
 
 </manifest>
