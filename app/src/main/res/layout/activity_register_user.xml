@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.example.macbook.smartparking.login.RegisterUserActivity">
+
+    <LinearLayout
+        android:id="@+id/username"
+        style="@style/section_edit_register"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageView
+            style="@style/icon_register"
+            android:src="@drawable/ic_account_circle_black_36dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <EditText
+            android:id="@+id/edit_username"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:imeOptions="actionNext"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/email"
+        style="@style/section_edit_register"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageView
+            style="@style/icon_register"
+            android:src="@drawable/ic_email_black_36dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <EditText
+            style="@style/edit_text_register"
+            android:layout_width="match_parent"
+            android:id="@+id/edit_email"
+            android:layout_height="wrap_content"
+            android:imeOptions="actionNext"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/password"
+        style="@style/section_edit_register"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageView
+            style="@style/icon_register"
+            android:src="@drawable/ic_lock_black_36dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <EditText
+            style="@style/edit_text_register"
+            android:id="@+id/edit_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <Button
+        android:layout_gravity="center_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Register"/>
+
+</LinearLayout>

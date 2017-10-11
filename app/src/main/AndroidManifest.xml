@@ -42,7 +42,8 @@
             android:label="@string/title_activity_login" />
         <activity android:name=".HomeScreenAdministrator" />
         <activity android:name=".maps.MapActivityMain" />
-        <activity android:name=".maps.FullMapActivity"></activity>
+        <activity android:name=".maps.FullMapActivity" />
+        <activity android:name=".login.RegisterUserActivity"></activity>
     </application>
 
 </manifest>

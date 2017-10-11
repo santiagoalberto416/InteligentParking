@@ -31,4 +31,9 @@
     <string name="server_url">https://parking-area-santy-ruler.c9users.io:8081/</string>
     <string name="graph_by_day">http://sparkingsystem.info/api/</string>
     <string name="socket_url">https://parking-area-santy-ruler.c9users.io:8082/</string>
+
+
+    <string name="hint_password">Contraseña</string>
+    <string name="hint_username">Nombre</string>
+    <string name="hint_email">Correo Electronico</string>
 </resources>
