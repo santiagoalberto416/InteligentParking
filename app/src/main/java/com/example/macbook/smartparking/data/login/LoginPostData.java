@@ -1,4 +1,4 @@
-package com.example.macbook.smartparking.login;
+package com.example.macbook.smartparking.data.login;
 
 /**
  * Created by santiagoalbertokirk on 12/10/17.

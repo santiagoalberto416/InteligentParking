@@ -1,4 +1,4 @@
-package com.example.macbook.smartparking.login;
+package com.example.macbook.smartparking;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -8,7 +8,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 
-import com.example.macbook.smartparking.R;
+import com.example.macbook.smartparking.data.login.RegisterPostData;
+import com.example.macbook.smartparking.data.login.RegisterRequestInterface;
+import com.example.macbook.smartparking.data.login.RegisterResponse;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

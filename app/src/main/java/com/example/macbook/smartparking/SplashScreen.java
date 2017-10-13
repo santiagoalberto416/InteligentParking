@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.example.macbook.smartparking.maps.FullMapActivity;
+import com.example.macbook.smartparking.maps.MapInteractionActivity;
 import com.example.macbook.smartparking.service.ListenSocketService;
 
 public class SplashScreen extends AppCompatActivity {
@@ -42,7 +43,7 @@ public class SplashScreen extends AppCompatActivity {
         continueButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent loginIntent = new Intent(SplashScreen.this, FullMapActivity.class);
+                Intent loginIntent = new Intent(SplashScreen.this, MapInteractionActivity.class);
                 startActivity(loginIntent);
             }
         });

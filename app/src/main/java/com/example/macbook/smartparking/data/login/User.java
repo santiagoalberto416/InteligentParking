@@ -1,5 +1,5 @@
 
-package com.example.macbook.smartparking.login;
+package com.example.macbook.smartparking.data.login;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
