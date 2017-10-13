@@ -58,6 +58,7 @@
     </style>
 
     <style name="edit_text_register">
+        <item name="android:maxLines">1</item>
         <item name="android:layout_gravity">center_vertical</item>
         <item name="android:gravity">center_vertical</item>
     </style>

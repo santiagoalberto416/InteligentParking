@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,73 +9,105 @@
     tools:context="com.example.macbook.smartparking.login.RegisterUserActivity">
 
     <LinearLayout
-        android:id="@+id/username"
-        style="@style/section_edit_register"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <ImageView
-            style="@style/icon_register"
-            android:src="@drawable/ic_account_circle_black_36dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <EditText
-            android:id="@+id/edit_username"
+        <LinearLayout
+            android:id="@+id/username"
+            style="@style/section_edit_register"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:imeOptions="actionNext"/>
+            android:orientation="horizontal">
 
-    </LinearLayout>
+            <ImageView
+                style="@style/icon_register"
+                android:src="@drawable/ic_account_circle_black_36dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
 
-    <LinearLayout
-        android:id="@+id/email"
-        style="@style/section_edit_register"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+            <EditText
+                style="@style/edit_text_register"
+                android:id="@+id/edit_username"
+                android:hint="@string/hint_username"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionNext"
+                android:nextFocusDown="@+id/edit_email" />
 
-        <ImageView
-            style="@style/icon_register"
-            android:src="@drawable/ic_email_black_36dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+        </LinearLayout>
 
-        <EditText
-            style="@style/edit_text_register"
+        <LinearLayout
+            android:id="@+id/email"
+            style="@style/section_edit_register"
             android:layout_width="match_parent"
-            android:id="@+id/edit_email"
             android:layout_height="wrap_content"
-            android:imeOptions="actionNext"/>
+            android:orientation="horizontal">
 
-    </LinearLayout>
+            <ImageView
+                style="@style/icon_register"
+                android:src="@drawable/ic_email_black_36dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
 
-    <LinearLayout
-        android:id="@+id/password"
-        style="@style/section_edit_register"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+            <EditText
+                android:nextFocusDown="@+id/edit_password"
+                style="@style/edit_text_register"
+                android:layout_width="match_parent"
+                android:id="@+id/edit_email"
+                android:inputType="textEmailAddress"
+                android:hint="@string/hint_email"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionNext"/>
 
-        <ImageView
-            style="@style/icon_register"
-            android:src="@drawable/ic_lock_black_36dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+        </LinearLayout>
 
-        <EditText
-            style="@style/edit_text_register"
-            android:id="@+id/edit_password"
+        <LinearLayout
+            android:id="@+id/password"
+            style="@style/section_edit_register"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                style="@style/icon_register"
+                android:src="@drawable/ic_lock_black_36dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <EditText
+                style="@style/edit_text_register"
+                android:id="@+id/edit_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                android:maxLines="1"
+                android:hint="@string/hint_password"/>
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/request_button"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Register"/>
 
     </LinearLayout>
 
-    <Button
-        android:layout_gravity="center_horizontal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Register"/>
 
-</LinearLayout>
+    <RelativeLayout
+        android:visibility="gone"
+        android:id="@+id/progresView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:elevation="4dp"
+        android:background="@color/secondary_text">
+        <ProgressBar
+            android:layout_centerInParent="true"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            />
+    </RelativeLayout>
+
+</RelativeLayout>
