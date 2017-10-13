@@ -45,6 +45,12 @@
         <activity android:name=".maps.FullMapActivity" />
         <activity android:name=".service.NotifyUserActivity"></activity>
         <service android:name=".service.ListenSocketService" android:icon="@drawable/ic_action_local_parking_black" android:label="@string/app_name" android:enabled="true"/>
+
+        <receiver android:name=".service.NotificationCancelReceiver">
+            <intent-filter android:priority="999" >
+                <action android:name="com.example.cancel" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
