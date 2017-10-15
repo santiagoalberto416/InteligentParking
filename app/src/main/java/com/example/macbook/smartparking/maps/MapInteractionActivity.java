@@ -7,14 +7,22 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.util.MalformedJsonException;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.Toast;
+
+import com.example.macbook.smartparking.OptionSpotParking;
 import com.example.macbook.smartparking.R;
 import com.example.macbook.smartparking.data.map.RestTask;
 import com.github.nkzawa.emitter.Emitter;
@@ -25,9 +33,13 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.geojson.GeoJsonFeature;
 import com.google.maps.android.geojson.GeoJsonLayer;
 import com.google.maps.android.geojson.GeoJsonPolygonStyle;
+
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -42,6 +54,9 @@ public class MapInteractionActivity extends AppCompatActivity implements OnMapRe
     private JSONObject data;
     private GeoJsonLayer layer;
     private FloatingActionButton button;
+    private View selectSpotView;
+    private Marker marker;
+    private Button cancelAction;
 
 
     public MapInteractionActivity() {
@@ -63,6 +78,20 @@ public class MapInteractionActivity extends AppCompatActivity implements OnMapRe
         } catch (URISyntaxException e) {
         }
         setContentView(R.layout.fragment_blank);
+        selectSpotView = findViewById(R.id.background);
+        selectSpotView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                cancelSpotOptions();
+            }
+        });
+        cancelAction = (Button)findViewById(R.id.cancel_action) ;
+        cancelAction.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                cancelSpotOptions();
+            }
+        });
         MapWorkerSingleton.getInstance().getContent("http://sparkingsystem.info/api/geojson", this);
         progress = ProgressDialog.show(this, "Getting Data ...", "Waiting For Results...", true);
         registerReceiver(receiver, new IntentFilter(MapWorkerSingleton.ACTION_FOR_INTENT_CALLBACK));
@@ -115,8 +144,15 @@ public class MapInteractionActivity extends AppCompatActivity implements OnMapRe
                             @Override
                             public void onFeatureClick(GeoJsonFeature geoJsonFeature) {
                                 int id = Integer.parseInt(geoJsonFeature.getProperty("id"));
-                                String state = geoJsonFeature.getProperty("state").toString();
-                                Toast.makeText(MapInteractionActivity.this, id+ " , state:"+ state, Toast.LENGTH_LONG).show();
+                                if(id!=0) {
+                                    MapInteractionActivity.this.selectSpotView.setVisibility(View.VISIBLE);
+                                    LatLng latLng = getFirstLocation(id);
+                                    MarkerOptions options = new MarkerOptions()
+                                            .position(latLng)
+                                            .title("Cajon numero " + id);
+                                    marker = mapa.addMarker(options);
+                                    mapa.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 20));
+                                }
                             }
                         });
                         mapa.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(32.459445, -116.825916), 19));
@@ -198,4 +234,38 @@ public class MapInteractionActivity extends AppCompatActivity implements OnMapRe
             }
         }
     }
+
+
+    public LatLng getFirstLocation(int id){
+        LatLng latLng = new LatLng(0, 0);
+        try {
+            JSONArray array = data.getJSONArray("features");
+            for (int i=0; i < array.length(); i++) {
+                JSONObject feature = array.getJSONObject(i);
+                JSONObject properties = feature.getJSONObject("properties");
+                int idToCompare = properties.getInt("id");
+                if(id == idToCompare){
+                    JSONObject geometry = feature.getJSONObject("geometry");
+                    JSONArray coordinates = geometry.getJSONArray("coordinates");
+                    JSONArray firstArray = (JSONArray)coordinates.get(0);
+                    JSONArray firstPair = (JSONArray)firstArray.get(0);
+                    latLng = new LatLng(firstPair.getDouble(1),firstPair.getDouble(0));
+                    Log.d("find", "find_it");
+                    return latLng;
+                }
+            }
+        }catch (JSONException ex){
+
+        }
+        return null;
+    }
+
+
+    public void cancelSpotOptions(){
+        selectSpotView.setVisibility(View.GONE);
+        if(marker!=null){
+            marker.remove();
+        }
+    }
+
 }

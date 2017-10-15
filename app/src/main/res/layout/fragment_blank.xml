@@ -25,4 +25,65 @@
         android:layout_alignParentBottom="true"
         app:layout_anchorGravity="bottom|right|end" />
 
+    <RelativeLayout
+        android:visibility="gone"
+        android:orientation="vertical" android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/background">
+
+
+        <LinearLayout
+            android:layout_alignParentTop="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_margin="16dp">
+
+            <RelativeLayout
+                android:background="@drawable/shape_bubble"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_margin="16dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:id="@+id/textSpot"
+                    android:text="Has Seleccionado este espacio es correcto?"/>
+
+                <LinearLayout
+                    android:layout_below="@id/textSpot"
+                    android:id="@+id/buttonContainer"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <Button
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:text="Aceptar"/>
+
+                    <Button
+                        android:id="@+id/cancel_action"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:text="Cancelar"/>
+
+                </LinearLayout>
+
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
+
 </FrameLayout>
