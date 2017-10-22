@@ -19,6 +19,16 @@ public class SplashScreen extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
+
+        int userType = SharedUtils.getInstance().getUserType(this);
+        if(userType==1){
+            Intent intentHomeSceen = new Intent(this, HomeScreenAdministrator.class);
+            startActivity(intentHomeSceen);
+        }else if(userType==2){
+            Intent intentMap = new Intent(this, MapInteractionActivity.class);
+            startActivity(intentMap);
+        }
+
         continueButton = (Button) findViewById(R.id.continueButton);
         continueButtonAdministrator = (Button) findViewById(R.id.continueButtonAdmin);
 
@@ -27,26 +37,18 @@ public class SplashScreen extends AppCompatActivity {
         intentService.putExtra(ListenSocketService.USER_ID, "test user name");
         startService(intentService);
 
-        continueButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-        continueButtonAdministrator.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        continueButtonAdministrator.setOnClickListener((View v)-> {
                 Intent loginIntent = new Intent(SplashScreen.this, LoginActivity.class);
                 startActivity(loginIntent);
-            }
-        });
-        continueButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            });
+        continueButton.setOnClickListener((View v) -> {
                 Intent loginIntent = new Intent(SplashScreen.this, MapInteractionActivity.class);
                 startActivity(loginIntent);
-            }
-        });
+            });
+
+        if(SharedUtils.getInstance().getUserId(this)!=0){
+
+        }
 
     }
 }

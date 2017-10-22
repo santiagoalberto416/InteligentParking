@@ -18,6 +18,9 @@ public class User {
     @SerializedName("id")
     @Expose
     private Integer id;
+    @SerializedName("user_type")
+    @Expose
+    private Integer user_type;
 
     public String getName() {
         return name;
@@ -49,6 +52,14 @@ public class User {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public Integer getUser_type() {
+        return user_type;
+    }
+
+    public void setUser_type(Integer user_type) {
+        this.user_type = user_type;
     }
 
 }

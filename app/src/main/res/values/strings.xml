@@ -2,8 +2,8 @@
     <string name="app_name">SmartParking</string>
 
     <string name="welcome_text">Hola bienvenido a inteligent parking</string>
-    <string name="continue_next">Continuar</string>
-    <string name="continue_administrator">Continuar como administrador</string>
+    <string name="continue_next">Ver espacios</string>
+    <string name="continue_administrator">Registrarse o hacer login</string>
     <string name="title_activity_login">Sign in</string>
 
     <!-- Strings related to login -->

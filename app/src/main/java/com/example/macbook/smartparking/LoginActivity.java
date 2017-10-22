@@ -33,6 +33,7 @@ import android.widget.Toast;
 import com.example.macbook.smartparking.data.login.LoginPostData;
 import com.example.macbook.smartparking.data.login.LoginUserInterface;
 import com.example.macbook.smartparking.data.login.RegisterResponse;
+import com.example.macbook.smartparking.maps.MapInteractionActivity;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -325,14 +326,26 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     RegisterResponse data = response.body();
                     switch (data.getStatus()){
                         case 0:
-                            //correct
-                            Intent intentHomeSceen = new Intent(LoginActivity.this, HomeScreenAdministrator.class);
-                            startActivity(intentHomeSceen);
-                            showProgress(false);
+                            if(data.getUser().getUser_type()==1){
+                                showProgress(false);
+                                SharedUtils.getInstance().setUserId(LoginActivity.this, data.getUser().getId());
+                                SharedUtils.getInstance().setUserType(LoginActivity.this, data.getUser().getUser_type());
+                                Intent intentHomeSceen = new Intent(LoginActivity.this, HomeScreenAdministrator.class);
+                                startActivity(intentHomeSceen);
+                                finish();
+                            }else if(data.getUser().getUser_type()==2){
+                                showProgress(false);
+                                SharedUtils.getInstance().setUserId(LoginActivity.this, data.getUser().getId());
+                                SharedUtils.getInstance().setUserType(LoginActivity.this, data.getUser().getUser_type());
+                                Intent intentMap = new Intent(LoginActivity.this, MapInteractionActivity.class);
+                                intentMap.putExtra(MapInteractionActivity.USER_ID, data.getUser().getId());
+                                startActivity(intentMap);
+                                finish();
+                            }
                             break;
                         default:
                             //email repeated
-                            Toast.makeText(LoginActivity.this, "Password o correo incorrectos", Toast.LENGTH_LONG);
+                            Toast.makeText(LoginActivity.this, "Password o correo incorrectos", Toast.LENGTH_LONG).show();
                             break;
                     }
                 }

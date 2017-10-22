@@ -103,6 +103,8 @@ public class HomeScreenAdministrator extends AppCompatActivity implements OnGrap
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.mybutton:
+                SharedUtils.getInstance().setUserId(this, 0);
+                SharedUtils.getInstance().setUserType(this, 0);
                 this.finish();
                 return true;
             default:

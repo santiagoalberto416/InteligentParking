@@ -7,7 +7,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
@@ -16,6 +18,9 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.util.MalformedJsonException;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -24,7 +29,9 @@ import android.widget.Toast;
 
 import com.example.macbook.smartparking.OptionSpotParking;
 import com.example.macbook.smartparking.R;
+import com.example.macbook.smartparking.SharedUtils;
 import com.example.macbook.smartparking.data.map.RestTask;
+import com.example.macbook.smartparking.service.ListenSocketService;
 import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
@@ -57,6 +64,10 @@ public class MapInteractionActivity extends AppCompatActivity implements OnMapRe
     private View selectSpotView;
     private Marker marker;
     private Button cancelAction;
+    private Button acceptButton;
+    private int mIdInUserinUse;
+    private int mIdSpotInUse;
+    public final static String USER_ID = "id_user";
 
 
     public MapInteractionActivity() {
@@ -73,6 +84,7 @@ public class MapInteractionActivity extends AppCompatActivity implements OnMapRe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mIdInUserinUse = SharedUtils.getInstance().getUserId(this);
         try {
             mSocket = IO.socket(getApplicationContext().getString(R.string.socket_url));
         } catch (URISyntaxException e) {
@@ -86,12 +98,16 @@ public class MapInteractionActivity extends AppCompatActivity implements OnMapRe
             }
         });
         cancelAction = (Button)findViewById(R.id.cancel_action) ;
-        cancelAction.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                cancelSpotOptions();
-            }
+        acceptButton = (Button)findViewById(R.id.accept_action) ;
+        acceptButton.setOnClickListener((View view) -> {
+            Intent i= new Intent(MapInteractionActivity.this, ListenSocketService.class);
+            i.putExtra(ListenSocketService.SPOT_ID, mIdSpotInUse);
+            i.putExtra(ListenSocketService.USER_ID, mIdInUserinUse);
+            MapInteractionActivity.this.startService(i);
         });
+        cancelAction.setOnClickListener((View view)-> {
+                cancelSpotOptions();
+            });
         MapWorkerSingleton.getInstance().getContent("http://sparkingsystem.info/api/geojson", this);
         progress = ProgressDialog.show(this, "Getting Data ...", "Waiting For Results...", true);
         registerReceiver(receiver, new IntentFilter(MapWorkerSingleton.ACTION_FOR_INTENT_CALLBACK));
@@ -144,14 +160,15 @@ public class MapInteractionActivity extends AppCompatActivity implements OnMapRe
                             @Override
                             public void onFeatureClick(GeoJsonFeature geoJsonFeature) {
                                 int id = Integer.parseInt(geoJsonFeature.getProperty("id"));
-                                if(id!=0) {
-                                    MapInteractionActivity.this.selectSpotView.setVisibility(View.VISIBLE);
-                                    LatLng latLng = getFirstLocation(id);
-                                    MarkerOptions options = new MarkerOptions()
-                                            .position(latLng)
-                                            .title("Cajon numero " + id);
-                                    marker = mapa.addMarker(options);
-                                    mapa.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 20));
+                                if(id!=0 && mIdInUserinUse!=0) {
+                                        MapInteractionActivity.this.selectSpotView.setVisibility(View.VISIBLE);
+                                        LatLng latLng = getFirstLocation(id);
+                                        MarkerOptions options = new MarkerOptions()
+                                                .position(latLng)
+                                                .title("Cajon numero " + id);
+                                        mIdSpotInUse = id;
+                                        marker = mapa.addMarker(options);
+                                        mapa.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 20));
                                 }
                             }
                         });
@@ -258,6 +275,34 @@ public class MapInteractionActivity extends AppCompatActivity implements OnMapRe
 
         }
         return null;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        if (SharedUtils.getInstance().getUserId(this)!=0) {
+            MenuInflater inflater = getMenuInflater();
+            inflater.inflate(R.menu.menu, menu);
+            MenuItem item = menu.getItem(0);
+            Drawable drawable = item.getIcon();
+            if (drawable != null) {
+                drawable.mutate();
+                drawable.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.mybutton:
+                SharedUtils.getInstance().setUserId(this, 0);
+                SharedUtils.getInstance().setUserType(this, 0);
+                this.finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
 
