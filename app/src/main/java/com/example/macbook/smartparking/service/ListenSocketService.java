@@ -6,6 +6,7 @@ import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Binder;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
@@ -13,6 +14,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.example.macbook.smartparking.R;
+import com.example.macbook.smartparking.maps.MapInteractionActivity;
 import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
@@ -35,13 +37,16 @@ public class ListenSocketService extends Service {
     private static final String TAG = "socketservice";
     private NotificationManager mNM;
     private Socket mSocket;
-    private String mNameOfUser;
+    private int mIdOfUser;
     private int mSpotId;
     public static final String USER_ID = "userid";
     public static final String SPOT_ID = "spotid";
     public static String YES_ACTION = "yesaction";
     public static String NO_ACTION = "noaction";
     public static final String NOTIFICATION_ID = "NOTIFICATION_ID";
+    static final String cancelAction = "com.example.cancel";
+    static final String acceptAction = "com.example.accept";
+    private BroadcastReceiver receiver;
 
     private int NOTIFICATION = R.string.local_service_started;
     private int mNotificationId = 1;
@@ -60,31 +65,52 @@ public class ListenSocketService extends Service {
     @Override
     public void onCreate() {
         mNM = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        showNotification();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(cancelAction);
+        filter.addAction(acceptAction);
+        receiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                //do something based on the intent's action
+                if (intent.getAction().equals(cancelAction)) {
+                    NotificationManager manager = (NotificationManager) context.getSystemService(context.NOTIFICATION_SERVICE);
+                    manager.cancel(R.string.local_service_started);
+                    context.stopService(new Intent(context, ListenSocketService.class));
+                }
+                if(intent.getAction().equals(acceptAction)){
+                    // notify to security
+                    mSocket.emit("notifySecurity", "{\"iduser\":"+mIdOfUser+", \"spot\":" + mSpotId + "}");
+                    NotificationManager manager = (NotificationManager) context.getSystemService(context.NOTIFICATION_SERVICE);
+                    manager.cancel(R.string.local_service_started);
+                    context.stopService(new Intent(context, ListenSocketService.class));
+                }
+            }
+        };
+        registerReceiver(receiver, filter);
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.i("LocalService", "Received start id " + startId + ": " + intent);
         try {
-            mSocket = IO.socket(getApplicationContext().getString(R.string.socket_url));
-            mNameOfUser = intent.getStringExtra(USER_ID);
+            mIdOfUser = intent.getIntExtra(USER_ID, 0);
             mSpotId = intent.getIntExtra(SPOT_ID, 0);
+            mSocket = IO.socket(getApplicationContext().getString(R.string.socket_url));
             mSocket.connect();
-            registerUser(mNameOfUser, mSpotId);
-            mSocket.on(mNameOfUser, onNewMessage);
+            registerUser(mIdOfUser, mSpotId);
+            mSocket.on("socketUser"+mIdOfUser, onNewMessage);
         } catch (URISyntaxException e) {
             Log.d(TAG, "isnt working the socket " + e.toString());
         }
         return START_NOT_STICKY;
     }
 
-    private void registerUser(String userid, int spotId) {
+    private void registerUser(int userid, int spotId) {
         try {
             JSONObject registerData = new JSONObject();
             registerData.put("iduser", userid);
             registerData.put("idspace", spotId);
-            mSocket.emit("registerUser", registerData);
+            mSocket.emit("registerUser", registerData.toString());
         }catch (JSONException ex){
             Log.d(TAG, "isnt work making jsonobject");
         }
@@ -114,6 +140,7 @@ public class ListenSocketService extends Service {
     public void onDestroy() {
         // Cancel the persistent notification.
         mNM.cancel(NOTIFICATION);
+        unregisterReceiver(receiver);
         // Tell the user we stopped.
         Toast.makeText(this, R.string.local_service_stopped, Toast.LENGTH_SHORT).show();
     }
@@ -149,23 +176,21 @@ public class ListenSocketService extends Service {
                         .setContentTitle("SmartParking")
                         .setContentIntent(resultPendingIntent)
                         .addAction(new NotificationCompat.Action(R.drawable.ic_action_local_parking_black, "Si, soy yo", getDismissIntent(getApplicationContext())))
-                        .addAction(new NotificationCompat.Action(R.drawable.ic_action_local_parking_black, "No soy yo", resultPendingIntent))
+                        .addAction(new NotificationCompat.Action(R.drawable.ic_action_local_parking_black, "No soy yo", getSecurityExceptionIntent(getApplicationContext())))
                         .setContentText("Tu carro esta saliendo, Eres tu?");
 
         // Send the notification.
         mNM.notify(NOTIFICATION, mBuilder.build());
     }
 
-    public class NotificationCancelReceiver extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            //Cancel your ongoing Notification
-            mNM.cancel(NOTIFICATION);
-        };
-    }
-
     public PendingIntent getDismissIntent(Context context) {
         Intent cancel = new Intent("com.example.cancel");
+        PendingIntent cancelP = PendingIntent.getBroadcast(context, 0, cancel, PendingIntent.FLAG_CANCEL_CURRENT);
+        return cancelP;
+    }
+
+    public PendingIntent getSecurityExceptionIntent(Context context) {
+        Intent cancel = new Intent("com.example.accept");
         PendingIntent cancelP = PendingIntent.getBroadcast(context, 0, cancel, PendingIntent.FLAG_CANCEL_CURRENT);
         return cancelP;
     }

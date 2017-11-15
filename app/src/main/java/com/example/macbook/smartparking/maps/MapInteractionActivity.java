@@ -86,7 +86,7 @@ public class MapInteractionActivity extends AppCompatActivity implements OnMapRe
         super.onCreate(savedInstanceState);
         mIdInUserinUse = SharedUtils.getInstance().getUserId(this);
         try {
-            mSocket = IO.socket(getApplicationContext().getString(R.string.socket_url));
+            mSocket = IO.socket(getApplicationContext().getString(R.string.server_url));
         } catch (URISyntaxException e) {
         }
         setContentView(R.layout.fragment_blank);
@@ -100,6 +100,7 @@ public class MapInteractionActivity extends AppCompatActivity implements OnMapRe
         cancelAction = (Button)findViewById(R.id.cancel_action) ;
         acceptButton = (Button)findViewById(R.id.accept_action) ;
         acceptButton.setOnClickListener((View view) -> {
+            cancelSpotOptions();
             Intent i= new Intent(MapInteractionActivity.this, ListenSocketService.class);
             i.putExtra(ListenSocketService.SPOT_ID, mIdSpotInUse);
             i.putExtra(ListenSocketService.USER_ID, mIdInUserinUse);

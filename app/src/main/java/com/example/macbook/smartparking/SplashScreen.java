@@ -32,11 +32,6 @@ public class SplashScreen extends AppCompatActivity {
         continueButton = (Button) findViewById(R.id.continueButton);
         continueButtonAdministrator = (Button) findViewById(R.id.continueButtonAdmin);
 
-        /// intent service
-        Intent intentService = new Intent(this, ListenSocketService.class);
-        intentService.putExtra(ListenSocketService.USER_ID, "test user name");
-        startService(intentService);
-
         continueButtonAdministrator.setOnClickListener((View v)-> {
                 Intent loginIntent = new Intent(SplashScreen.this, LoginActivity.class);
                 startActivity(loginIntent);
