@@ -26,6 +26,24 @@
         app:layout_anchorGravity="bottom|right|end" />
 
     <RelativeLayout
+        android:id="@+id/confirmation"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/black">
+
+        <TextView
+            android:background="@android:color/white"
+            android:layout_centerInParent="true"
+            android:layout_margin="16dp"
+            android:padding="16dp"
+            android:text="@string/confirmation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:elevation="4dp"/>
+
+    </RelativeLayout>
+    <RelativeLayout
         android:visibility="gone"
         android:orientation="vertical" android:layout_width="match_parent"
         android:layout_height="match_parent"

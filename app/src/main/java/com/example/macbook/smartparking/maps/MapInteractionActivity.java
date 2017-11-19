@@ -1,6 +1,7 @@
 package com.example.macbook.smartparking.maps;
 
 import android.app.Dialog;
+import android.app.NotificationManager;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -62,12 +63,14 @@ public class MapInteractionActivity extends AppCompatActivity implements OnMapRe
     private GeoJsonLayer layer;
     private FloatingActionButton button;
     private View selectSpotView;
+    private View confirmationView;
     private Marker marker;
     private Button cancelAction;
     private Button acceptButton;
     private int mIdInUserinUse;
     private int mIdSpotInUse;
     public final static String USER_ID = "id_user";
+    static final String SPOT_IS_OCUPATED = "com.example.ocupated";
 
 
     public MapInteractionActivity() {
@@ -90,6 +93,7 @@ public class MapInteractionActivity extends AppCompatActivity implements OnMapRe
         } catch (URISyntaxException e) {
         }
         setContentView(R.layout.fragment_blank);
+        confirmationView = findViewById(R.id.confirmation);
         selectSpotView = findViewById(R.id.background);
         selectSpotView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -105,6 +109,8 @@ public class MapInteractionActivity extends AppCompatActivity implements OnMapRe
             i.putExtra(ListenSocketService.SPOT_ID, mIdSpotInUse);
             i.putExtra(ListenSocketService.USER_ID, mIdInUserinUse);
             MapInteractionActivity.this.startService(i);
+            mSocket.on("notifySpot"+SharedUtils.getInstance().getUserId(MapInteractionActivity.this), onSpotSelected);
+            confirmationView.setVisibility(View.VISIBLE);
         });
         cancelAction.setOnClickListener((View view)-> {
                 cancelSpotOptions();
@@ -229,6 +235,38 @@ public class MapInteractionActivity extends AppCompatActivity implements OnMapRe
             });
         }
     };
+
+
+
+    private Emitter.Listener onSpotSelected = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            final Object[] arg = args;
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        JSONObject data = new JSONObject((String) arg[0]);
+                        Log.d("data socket", data.toString());
+                        int state;
+                        try {
+                            state = data.getInt("state");
+                            if(state == 0){
+                                cancelSpotOptions();
+                                MapInteractionActivity.this.stopService(new Intent(MapInteractionActivity.this, ListenSocketService.class));
+                                Toast.makeText(MapInteractionActivity.this, "Este espacio ya fue registrado por otro usuario, consulte al administrador", Toast.LENGTH_LONG).show();
+                            }
+                        } catch (JSONException e) {
+                            return;
+                        }
+                    } catch (JSONException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            });
+        }
+    };
+
 
     private void changeStateToFeature(int id, String state) {
         if (mapa != null) {

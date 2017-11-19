@@ -41,9 +41,6 @@ public class ListenSocketService extends Service {
     private int mSpotId;
     public static final String USER_ID = "userid";
     public static final String SPOT_ID = "spotid";
-    public static String YES_ACTION = "yesaction";
-    public static String NO_ACTION = "noaction";
-    public static final String NOTIFICATION_ID = "NOTIFICATION_ID";
     static final String cancelAction = "com.example.cancel";
     static final String acceptAction = "com.example.accept";
     private BroadcastReceiver receiver;
@@ -114,17 +111,6 @@ public class ListenSocketService extends Service {
         }catch (JSONException ex){
             Log.d(TAG, "isnt work making jsonobject");
         }
-    }
-
-    private void notifyToSecurity(String userid, int spotId){
-        try {
-            JSONObject registerData = new JSONObject();
-            registerData.put("iduser", userid);
-            registerData.put("idspace", spotId);
-            mSocket.emit("notifySecurity", registerData);
-        }catch (JSONException ex){
-            Log.d(TAG, "isnt work making jsonobject");
-        };
     }
 
     private Emitter.Listener onNewMessage = new Emitter.Listener() {
