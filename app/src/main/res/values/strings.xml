@@ -32,7 +32,7 @@
     <string name="graph_by_day">http://sparkingsystem.info/api/</string>
     <string name="socket_url">https://parking-area-santy-ruler.c9users.io:8082</string>
 
-    <string name="confirmation">Se te informara si tu automovil sale de su espacio, puedes minimisar el app</string>
+    <string name="confirmation">Se te informara si tu automovil sale de su espacio, por favor no cierres el app</string>
     <string name="local_service_started">started</string>
     <string name="local_service_stopped">stopped</string>
     <string name="local_service_label">service_example</string>

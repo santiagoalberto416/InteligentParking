@@ -15,6 +15,7 @@ public class SharedUtils {
 
     private final static String USER_ID = "id_user";
     private final static String USER_TYPE = "user_type";
+    private final static String SPOT = "spot";
     private final static String USER_PREFERENCES = "user_preferences";
     private static SharedUtils myObj;
     /**
@@ -43,6 +44,18 @@ public class SharedUtils {
     public int getUserId(Context context){
         SharedPreferences sharedPref = context.getSharedPreferences(USER_PREFERENCES, Context.MODE_PRIVATE);
         return sharedPref.getInt(USER_ID, 0);
+    }
+
+    public void setSpot(Context context, int id){
+        SharedPreferences sharedPref = context.getSharedPreferences(USER_PREFERENCES, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putInt(SPOT, id );
+        editor.commit();
+    }
+
+    public int getSpot(Context context){
+        SharedPreferences sharedPref = context.getSharedPreferences(USER_PREFERENCES, Context.MODE_PRIVATE);
+        return sharedPref.getInt(SPOT, 0);
     }
 
     public void setUserType(Context context, int type){

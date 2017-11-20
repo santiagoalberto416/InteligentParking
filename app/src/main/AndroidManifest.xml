@@ -43,10 +43,10 @@
         <activity android:name=".HomeScreenAdministrator" />
         <activity android:name=".maps.MapActivityMain" />
         <activity android:name=".maps.FullMapActivity" />
-        <activity android:name=".service.NotifyUserActivity"></activity>
+        <activity android:name=".service.NotifyUserActivity" android:screenOrientation="portrait"></activity>
         <service android:name=".service.ListenSocketService" android:icon="@drawable/ic_action_local_parking_black" android:label="@string/app_name" android:enabled="true"/>
-        <activity android:name=".RegisterUserActivity"></activity>
-        <activity android:name=".maps.MapInteractionActivity"></activity>
+        <activity android:name=".RegisterUserActivity" android:screenOrientation="portrait"></activity>
+        <activity android:name=".maps.MapInteractionActivity" android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>

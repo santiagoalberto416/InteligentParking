@@ -1,5 +1,6 @@
 package com.example.macbook.smartparking.maps;
 
+import android.app.ActivityManager;
 import android.app.Dialog;
 import android.app.NotificationManager;
 import android.app.ProgressDialog;
@@ -141,8 +142,23 @@ public class MapInteractionActivity extends AppCompatActivity implements OnMapRe
     public void onResume() {
         super.onResume();
         registerReceiver(receiver, new IntentFilter(MapWorkerSingleton.ACTION_FOR_INTENT_CALLBACK));
+        if(!isMyServiceRunning(ListenSocketService.class)){
+            confirmationView.setVisibility(View.GONE);
+        }else{
+            confirmationView.setVisibility(View.VISIBLE);
+        }
     }
 
+
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     @Override
     public void onPause() {

@@ -14,6 +14,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.example.macbook.smartparking.R;
+import com.example.macbook.smartparking.SharedUtils;
 import com.example.macbook.smartparking.maps.MapInteractionActivity;
 import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.IO;
@@ -92,6 +93,7 @@ public class ListenSocketService extends Service {
         try {
             mIdOfUser = intent.getIntExtra(USER_ID, 0);
             mSpotId = intent.getIntExtra(SPOT_ID, 0);
+            SharedUtils.getInstance().setSpot(getApplicationContext(), mSpotId);
             mSocket = IO.socket(getApplicationContext().getString(R.string.socket_url));
             mSocket.connect();
             registerUser(mIdOfUser, mSpotId);
