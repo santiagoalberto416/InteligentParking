@@ -116,7 +116,7 @@ public class MapInteractionActivity extends AppCompatActivity implements OnMapRe
         cancelAction.setOnClickListener((View view)-> {
                 cancelSpotOptions();
             });
-        MapWorkerSingleton.getInstance().getContent("http://sparkingsystem.info/api/geojson", this);
+
         progress = ProgressDialog.show(this, "Getting Data ...", "Waiting For Results...", true);
         registerReceiver(receiver, new IntentFilter(MapWorkerSingleton.ACTION_FOR_INTENT_CALLBACK));
         MapFragment mapFragment = (MapFragment) this.getFragmentManager()
@@ -141,6 +141,7 @@ public class MapInteractionActivity extends AppCompatActivity implements OnMapRe
     @Override
     public void onResume() {
         super.onResume();
+        MapWorkerSingleton.getInstance().getContent("http://sparkingsystem.info/api/geojson", this);
         registerReceiver(receiver, new IntentFilter(MapWorkerSingleton.ACTION_FOR_INTENT_CALLBACK));
         if(!isMyServiceRunning(ListenSocketService.class)){
             confirmationView.setVisibility(View.GONE);
